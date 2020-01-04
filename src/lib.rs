@@ -7,27 +7,20 @@ extern crate no_std_compat as std;
 use std::prelude::v1::*;
 
 #[cfg(test)]
-
 mod tests {
 
     #[cfg(feature = "constants")]
     #[test]
-
     fn test_cracker() {
         let mut x = crate::BruteForce::new(crate::UPPERCASE_CHARS);
-
         let password = "PASS";
-
         let mut trys: i32 = 0;
 
         loop {
             trys = trys + 1;
-
             let out = x.raw_next();
-
             if out == password.to_string() {
                 println!(">>> SUCCESS ({} times)", trys);
-
                 break;
             }
         }
@@ -35,32 +28,27 @@ mod tests {
 }
 
 #[cfg(feature = "constants")]
-
 pub const UPPERCASE_CHARS: &'static [char] = &[
     'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S',
     'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
 ];
 
 #[cfg(feature = "constants")]
-
 pub const LOWERCASE_CHARS: &'static [char] = &[
     'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's',
     't', 'u', 'v', 'w', 'x', 'y', 'z',
 ];
 
 #[cfg(feature = "constants")]
-
 pub const NUMBER_CHARS: &'static [char] = &['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
 
 #[cfg(feature = "constants")]
-
 pub const SPECIAL_CHARS: &'static [char] = &[
     '!', '\"', '\'', '?', '\\', '#', '$', '§', '%', '&', '/', '(', ')', '=', '[', ']', '(', ')',
     '{', '}', '´', '`', '<', '>', '€', ',', '.', '-', '_',
 ];
 
 /// Represents a brute-forcing instance
-
 pub struct BruteForce {
     /// Represents the charset of the brute-forcer
     pub chars: &'static [char],
@@ -168,9 +156,7 @@ impl BruteForce {
 
     pub fn raw_next(&mut self) -> String {
         let current_chars: Vec<char> = self.current.chars().collect();
-
         let mut s: String = String::new();
-
         let len: usize = *&current_chars.len();
 
         for n in 0..len {
@@ -196,7 +182,6 @@ impl BruteForce {
         }
 
         self.current = s.clone();
-
         return s;
     }
 
