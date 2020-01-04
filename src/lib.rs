@@ -1,24 +1,27 @@
-//#![cfg_attr(not(feature = "std"), no_std)]
-//extern crate no_std_compat as std;
-//use std::prelude::v1::*;
+#![crate_name = "bruteforce"]
+#![feature(const_fn)]
+#![cfg_attr(not(feature = "std"), no_std)]
 
-#[cfg(feature = "constants")]
+extern crate no_std_compat as std;
+
+use std::prelude::v1::*;
+
 #[cfg(test)]
 mod tests {
+
+    #[cfg(feature = "constants")]
     #[test]
-    fn it_works() {
+    fn test_cracker() {
         let mut x = crate::BruteForce::new(crate::UPPERCASE_CHARS);
         let password = "PASS";
         let mut trys: i32 = 0;
         loop {
             trys = trys + 1;
-            let out = x.next();
+            let out = x.raw_next();
             if out == password.to_string() {
                 println!(">>> SUCCESS ({} times)", trys);
-                break;
             }
         }
-        assert_eq!(2 + 2, 4);
     }
 }
 
@@ -43,19 +46,66 @@ pub const SPECIAL_CHARS: &'static [char] = &[
     '{', '}', '´', '`', '<', '>', '€', ',', '.', '-', '_',
 ];
 
+/// Represents a brute-forcing instance
 pub struct BruteForce {
-    chars: &'static [char],
+    /// Represents the charset of the brute-forcer
+    pub chars: &'static [char],
+
+    /// This is the current string
     pub current: String,
 }
 
 impl BruteForce {
+    /// Returns a brute forcer with default settings
+    ///
+    /// # Arguments
+    ///
+    /// * `charset` - A static char array that contains all chars to be tried
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// use bruteforce::BruteForce;
+    /// let mut brute_forcer = BruteForce::new(bruteforce::UPPERCASE_CHARS);
+    ///
+    /// const password: &'static str = "PASS";
+    /// for s in brute_forcer {
+    /// if s == password.to_string() {
+    ///        println!("Password cracked");
+    ///        break;
+    ///    }
+    /// }
+    /// ```
     pub fn new(charset: &'static [char]) -> BruteForce {
         BruteForce {
             chars: charset,
             current: charset[0].to_string(),
         }
     }
-    pub fn new_start(charset: &'static [char], start: usize) -> BruteForce {
+
+    /// Returns a brute forcer skipping some letters
+    /// ///
+    /// # Arguments
+    ///
+    /// * `charset` - A static char array that contains all chars to be tried
+    /// * `start` - E.g. the known password length
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// // This example will take less time, because we know the password length
+    /// use bruteforce::BruteForce;
+    /// let mut brute_forcer = BruteForce::new_at(bruteforce::UPPERCASE_CHARS, 4);
+    ///
+    /// const password: &'static str = "PASS";
+    /// for s in brute_forcer {
+    /// if s == password.to_string() {
+    ///        println!("Password cracked");
+    ///        break;
+    ///    }
+    /// }
+    /// ```
+    pub fn new_at(charset: &'static [char], start: usize) -> BruteForce {
         let mut start_string = String::new();
         for _ in 0..start {
             start_string.push(charset[0]);
@@ -65,7 +115,38 @@ impl BruteForce {
             current: start_string,
         }
     }
-    pub fn next(&mut self) -> String {
+
+    /// Returns a brute forcer skipping some text
+    /// ///
+    /// # Arguments
+    ///
+    /// * `charset` - A static char array that contains all chars to be tried
+    /// * `start_string` - A string
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// // This could be useful if we want to save our brute force progress and resume it later
+    /// use bruteforce::BruteForce;
+    /// let mut brute_forcer = BruteForce::new_by_start_string(bruteforce::UPPERCASE_CHARS, "CCCC");
+    ///
+    /// const password: &'static str = "PASS";
+    /// for s in brute_forcer {
+    /// if s == password.to_string() {
+    ///        println!("Password cracked");
+    ///        break;
+    ///    }
+    /// }
+    /// ```
+    pub const fn new_by_start_string(charset: &'static [char], start_string: String) -> BruteForce {
+        BruteForce {
+            chars: charset,
+            current: start_string,
+        }
+    }
+
+    /// This returns the next element without unnecessary boxing in a Option
+    pub fn raw_next(&mut self) -> String {
         let current_chars: Vec<char> = self.current.chars().collect();
         let mut s: String = String::new();
         let len: usize = *&current_chars.len();
@@ -86,7 +167,6 @@ impl BruteForce {
                 }
             } else {
                 s.push(*self.next_char(c));
-
             }
         }
         self.current = s.clone();
@@ -122,11 +202,18 @@ impl BruteForce {
         self.last_char() == c
     }
 
-    fn first_char(&self) -> &char {
+    const fn first_char(&self) -> &char {
         &self.chars[0]
     }
 
-    fn last_char(&self) -> &char {
+    const fn last_char(&self) -> &char {
         &self.chars[self.chars.len() - 1]
+    }
+}
+
+impl Iterator for BruteForce {
+    type Item = String;
+    fn next(&mut self) -> Option<String> {
+        Some(self.raw_next())
     }
 }
