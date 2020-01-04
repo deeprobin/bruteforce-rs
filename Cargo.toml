@@ -1,0 +1,18 @@
+[package]
+name = "bruteforce"
+description = "A WIP rust bruteforce library"
+version = "0.1.0"
+authors = ["Robin Lindner <robin@deeprobin.de>"]
+edition = "2018"
+license = "MIT"
+homepage = "https://deeprobin.de/?reference=bruteforce"
+documentation = "https://github.com/DeepRobin/bruteforce-rs/wiki"
+repository = "https://github.com/DeepRobin/bruteforce-rs.git"
+
+[dependencies]
+no-std-compat = { version = "0.2.0", features = [ "alloc" ] }
+
+[features]
+default = [ "std", "constants" ]
+constants = []
+std = [ "no-std-compat/std" ]
