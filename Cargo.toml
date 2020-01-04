@@ -8,13 +8,6 @@ license = "MIT"
 homepage = "https://deeprobin.de/?reference=bruteforce"
 documentation = "https://github.com/DeepRobin/bruteforce-rs/wiki"
 repository = "https://github.com/DeepRobin/bruteforce-rs.git"
-keywords = [
-    "bruteforce",
-    "password cracking",
-    "pentesting",
-    "hacking",
-    "security"
-]
 
 [dependencies]
 no-std-compat = { version = "0.2.0", features = [ "alloc" ] }
