@@ -14,7 +14,6 @@ keywords = [
     "password",
     "algorithm",
     "no_std",
-    "library",
 ]
 
 [dependencies]
