@@ -134,7 +134,7 @@ impl BruteForce {
     /// ```
     /// // This could be useful if we want to save our brute force progress and resume it later
     /// use bruteforce::BruteForce;
-    /// let mut brute_forcer = BruteForce::new_by_start_string(bruteforce::UPPERCASE_CHARS, "CCCC");
+    /// let mut brute_forcer = BruteForce::new_by_start_string(bruteforce::UPPERCASE_CHARS, "CCCC".to_string());
     ///
     /// const password: &'static str = "PASS";
     /// for s in brute_forcer {
