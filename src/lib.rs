@@ -185,7 +185,7 @@ impl BruteForce {
     pub fn raw_next(&mut self) -> String {
         let current_chars = &self.current;
         let mut s: String = String::new();
-        let len: usize = current_chars.len();
+        let len: usize = current_chars.chars().count();
 
         for (n, c) in current_chars.chars().enumerate() {
             if n != (len - 1) {
