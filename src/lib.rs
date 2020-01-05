@@ -19,7 +19,6 @@ mod tests {
     use super::*;
     use test::Bencher;
 
-    #[cfg(feature = "constants")]
     #[bench]
     fn bench_raw_next(b: &mut Bencher) {
         let mut brute_forcer = crate::BruteForce::new(crate::UPPERCASE_CHARS);
@@ -182,7 +181,7 @@ impl BruteForce {
     }
 
     /// This returns the next element without unnecessary boxing in a Option
-    pub fn raw_next(&mut self) -> String {
+    pub fn raw_next(&mut self) -> &str {
         let current_chars = &self.current;
         let mut s: String = String::new();
         let len: usize = current_chars.chars().count();
@@ -207,8 +206,8 @@ impl BruteForce {
             }
         }
 
-        self.current = s.clone();
-        return s;
+        self.current = s;
+        return &self.current;
     }
 
     fn are_next_chars_last(&self, chars: &String, start: usize) -> bool {
@@ -244,6 +243,6 @@ impl Iterator for BruteForce {
     type Item = String;
 
     fn next(&mut self) -> Option<String> {
-        Some(self.raw_next())
+        Some(self.raw_next().to_string())
     }
 }
