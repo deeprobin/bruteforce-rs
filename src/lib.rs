@@ -93,20 +93,20 @@ pub const SPECIAL_CHARS: &'static [char] = &[
 ];
 
 /// Represents a brute-forcing instance
-pub struct BruteForce {
+pub struct BruteForce<'a> {
     /// Represents the charset of the brute-forcer
-    pub chars: &'static [char],
+    pub chars: &'a [char],
 
     /// This is the current string
     pub current: String,
 }
 
-impl BruteForce {
+impl<'a> BruteForce<'a> {
     /// Returns a brute forcer with default settings
     ///
     /// # Arguments
     ///
-    /// * `charset` - A static char array that contains all chars to be tried
+    /// * `charset` - A char array that contains all chars to be tried
     ///
     /// # Example
     ///
@@ -122,7 +122,7 @@ impl BruteForce {
     ///    }
     /// }
     /// ```
-    pub fn new(charset: &'static [char]) -> BruteForce {
+    pub fn new(charset: &[char]) -> BruteForce {
         BruteForce {
             chars: charset,
             current: charset[0].to_string(),
@@ -133,7 +133,7 @@ impl BruteForce {
     /// ///
     /// # Arguments
     ///
-    /// * `charset` - A static char array that contains all chars to be tried
+    /// * `charset` - A char array that contains all chars to be tried
     /// * `start` - E.g. the known password length
     ///
     /// # Example
@@ -151,7 +151,7 @@ impl BruteForce {
     ///    }
     /// }
     /// ```
-    pub fn new_at(charset: &'static [char], start: usize) -> BruteForce {
+    pub fn new_at(charset: &[char], start: usize) -> BruteForce {
         let mut start_string = String::new();
 
         for _ in 0..start {
@@ -168,7 +168,7 @@ impl BruteForce {
     /// ///
     /// # Arguments
     ///
-    /// * `charset` - A static char array that contains all chars to be tried
+    /// * `charset` - A char array that contains all chars to be tried
     /// * `start_string` - A string
     ///
     /// # Example
@@ -186,7 +186,7 @@ impl BruteForce {
     ///    }
     /// }
     /// ```
-    pub const fn new_by_start_string(charset: &'static [char], start_string: String) -> BruteForce {
+    pub const fn new_by_start_string(charset: &[char], start_string: String) -> BruteForce {
         BruteForce {
             chars: charset,
             current: start_string,
@@ -252,7 +252,7 @@ impl BruteForce {
     }
 }
 
-impl Iterator for BruteForce {
+impl<'a> Iterator for BruteForce<'a> {
     type Item = String;
 
     fn next(&mut self) -> Option<String> {
