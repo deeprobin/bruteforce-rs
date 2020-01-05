@@ -155,29 +155,27 @@ impl BruteForce {
     /// This returns the next element without unnecessary boxing in a Option
 
     pub fn raw_next(&mut self) -> String {
-        let current_chars: Vec<char> = self.current.chars().collect();
+        let current_chars = &self.current;
         let mut s: String = String::new();
-        let len: usize = *&current_chars.len();
+        let len: usize = current_chars.len();
 
-        for n in 0..len {
-            let c = &current_chars[n];
-
+        for (n,c) in current_chars.chars().enumerate() {
             if n != (len - 1) {
-                if self.are_next_chars_last(&current_chars, n + 1) {
-                    s.push(*self.next_char(c));
+                if self.are_next_chars_last(current_chars, n + 1) {
+                    s.push(self.next_char(c));
                 } else {
-                    s.push(*c);
+                    s.push(c);
                 }
             } else if self.is_last_char(c) {
-                if self.are_all_chars_last(&current_chars) {
-                    s.push(*self.first_char());
+                if self.are_all_chars_last(current_chars) {
+                    s.push(self.first_char());
 
-                    s.push(*self.first_char());
+                    s.push(self.first_char());
                 } else {
-                    s.push(*self.first_char());
+                    s.push(self.first_char());
                 }
             } else {
-                s.push(*self.next_char(c));
+                s.push(self.next_char(c));
             }
         }
 
@@ -185,38 +183,30 @@ impl BruteForce {
         return s;
     }
 
-    fn are_next_chars_last(&self, chars: &Vec<char>, start: usize) -> bool {
-        chars.iter().skip(start).all(|c| self.is_last_char(c))
+    fn are_next_chars_last(&self, chars: &String, start: usize) -> bool {
+        chars.chars().skip(start).all(|c| self.is_last_char(c))
     }
 
-    fn are_all_chars_last(&self, chars: &Vec<char>) -> bool {
+    fn are_all_chars_last(&self, chars: &String) -> bool {
         self.are_next_chars_last(chars, 0)
     }
 
-    fn next_char(&self, c: &char) -> &char {
-        let mut is_next: bool = false;
-
-        for ch in self.chars {
-            if is_next {
-                return ch;
-            } else if ch == c {
-                is_next = true;
-            }
-        }
-
-        return &self.chars[0];
+    fn next_char(&self, c: char) -> char {
+        if let Some(&ch)=self.chars.iter()
+            .skip_while(|&&ch| ch!=c).nth(1)
+        {ch} else {self.chars[0]}
     }
 
-    fn is_last_char(&self, c: &char) -> bool {
+    fn is_last_char(&self, c: char) -> bool {
         self.last_char() == c
     }
 
-    const fn first_char(&self) -> &char {
-        &self.chars[0]
+    const fn first_char(&self) -> char {
+        self.chars[0]
     }
 
-    const fn last_char(&self) -> &char {
-        &self.chars[self.chars.len() - 1]
+    const fn last_char(&self) -> char {
+        self.chars[self.chars.len() - 1]
     }
 }
 
