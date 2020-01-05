@@ -1,47 +1,78 @@
+//! This is the documentation for the `bruteforce` crate
+//! It has also no-std support.
+//! It is ready to get implemented to your projects
+
 #![crate_name = "bruteforce"]
 #![feature(const_fn)]
+#![feature(test)]
 #![cfg_attr(not(feature = "std"), no_std)]
 
+extern crate test;
+
+#[cfg(not(feature = "std"))]
 extern crate no_std_compat as std;
 
 use std::prelude::v1::*;
 
 #[cfg(test)]
 mod tests {
+    use super::*;
+    use test::Bencher;
+
+    #[bench]
+    fn bench_raw_next(b: &mut Bencher) {
+        let mut brute_forcer = crate::BruteForce::new(crate::UPPERCASE_CHARS);
+        b.iter(|| brute_forcer.raw_next());
+    }
 
     #[cfg(feature = "constants")]
-    #[test]
-    fn test_cracker() {
-        let mut x = crate::BruteForce::new(crate::UPPERCASE_CHARS);
-        let password = "PASS";
-        let mut trys: i32 = 0;
+    #[bench]
+    fn bench_next(b: &mut Bencher) {
+        let mut brute_forcer = crate::BruteForce::new(crate::UPPERCASE_CHARS);
+        b.iter(|| brute_forcer.next());
+    }
 
-        loop {
-            trys = trys + 1;
-            let out = x.raw_next();
-            if out == password {
-                println!(">>> SUCCESS ({} times)", trys);
-                break;
-            }
-        }
+    #[cfg(feature = "constants")]
+    #[bench]
+    fn bench_next_char(b: &mut Bencher) {
+        let brute_forcer = crate::BruteForce::new(crate::UPPERCASE_CHARS);
+        b.iter(|| brute_forcer.next_char('A'));
+    }
+
+    #[cfg(feature = "constants")]
+    #[bench]
+    fn bench_are_all_chars_last(b: &mut Bencher) {
+        let brute_forcer = crate::BruteForce::new(crate::UPPERCASE_CHARS);
+        let s = "ZZZZ".to_string();
+        b.iter(|| brute_forcer.are_all_chars_last(&s));
+    }
+
+    #[cfg(feature = "constants")]
+    #[bench]
+    fn bench_new(b: &mut Bencher) {
+        b.iter(|| crate::BruteForce::new(crate::UPPERCASE_CHARS));
     }
 }
 
+/// Uppercase characters from `A` to `Z`
 #[cfg(feature = "constants")]
 pub const UPPERCASE_CHARS: &'static [char] = &[
     'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S',
     'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
 ];
 
+/// Lowercase characters from `a` to `z`
 #[cfg(feature = "constants")]
 pub const LOWERCASE_CHARS: &'static [char] = &[
     'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's',
     't', 'u', 'v', 'w', 'x', 'y', 'z',
 ];
 
+/// Number characters from `0` to `9`
 #[cfg(feature = "constants")]
 pub const NUMBER_CHARS: &'static [char] = &['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
 
+/// Most used special characters
 #[cfg(feature = "constants")]
 pub const SPECIAL_CHARS: &'static [char] = &[
     '!', '\"', '\'', '?', '\\', '#', '$', '§', '%', '&', '/', '(', ')', '=', '[', ']', '(', ')',
@@ -66,7 +97,7 @@ impl BruteForce {
     ///
     /// # Example
     ///
-    /// ```
+    /// ```rust
     /// use bruteforce::BruteForce;
     /// let mut brute_forcer = BruteForce::new(bruteforce::UPPERCASE_CHARS);
     ///
@@ -78,7 +109,6 @@ impl BruteForce {
     ///    }
     /// }
     /// ```
-
     pub fn new(charset: &'static [char]) -> BruteForce {
         BruteForce {
             chars: charset,
@@ -95,7 +125,7 @@ impl BruteForce {
     ///
     /// # Example
     ///
-    /// ```
+    /// ```rust
     /// // This example will take less time, because we know the password length
     /// use bruteforce::BruteForce;
     /// let mut brute_forcer = BruteForce::new_at(bruteforce::UPPERCASE_CHARS, 4);
@@ -108,7 +138,6 @@ impl BruteForce {
     ///    }
     /// }
     /// ```
-
     pub fn new_at(charset: &'static [char], start: usize) -> BruteForce {
         let mut start_string = String::new();
 
@@ -131,7 +160,7 @@ impl BruteForce {
     ///
     /// # Example
     ///
-    /// ```
+    /// ```rust
     /// // This could be useful if we want to save our brute force progress and resume it later
     /// use bruteforce::BruteForce;
     /// let mut brute_forcer = BruteForce::new_by_start_string(bruteforce::UPPERCASE_CHARS, "CCCC".to_string());
@@ -144,7 +173,6 @@ impl BruteForce {
     ///    }
     /// }
     /// ```
-
     pub const fn new_by_start_string(charset: &'static [char], start_string: String) -> BruteForce {
         BruteForce {
             chars: charset,
@@ -153,13 +181,12 @@ impl BruteForce {
     }
 
     /// This returns the next element without unnecessary boxing in a Option
-
     pub fn raw_next(&mut self) -> &str {
         let current_chars = &self.current;
         let mut s: String = String::new();
-        let len: usize = current_chars.len();
+        let len: usize = current_chars.chars().count();
 
-        for (n,c) in current_chars.chars().enumerate() {
+        for (n, c) in current_chars.chars().enumerate() {
             if n != (len - 1) {
                 if self.are_next_chars_last(current_chars, n + 1) {
                     s.push(self.next_char(c));
@@ -192,9 +219,11 @@ impl BruteForce {
     }
 
     fn next_char(&self, c: char) -> char {
-        if let Some(&ch)=self.chars.iter()
-            .skip_while(|&&ch| ch!=c).nth(1)
-        {ch} else {self.chars[0]}
+        if let Some(&ch) = self.chars.iter().skip_while(|&&ch| ch != c).nth(1) {
+            ch
+        } else {
+            self.chars[0]
+        }
     }
 
     fn is_last_char(&self, c: char) -> bool {
