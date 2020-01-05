@@ -9,18 +9,24 @@ use std::prelude::v1::*;
 #[cfg(test)]
 mod tests {
 
+    use std::time::{SystemTime};
+
     #[cfg(feature = "constants")]
     #[test]
     fn test_cracker() {
         let mut x = crate::BruteForce::new(crate::UPPERCASE_CHARS);
         let password = "PASS";
         let mut trys: i32 = 0;
-
+        let start = SystemTime::now();
         loop {
             trys = trys + 1;
             let out = x.raw_next();
             if out == password.to_string() {
-                println!(">>> SUCCESS ({} times)", trys);
+                let end = SystemTime::now();
+                let since_the_epoch = end
+                    .duration_since(start)
+                    .expect("Time went backwards");
+                println!(">>> SUCCESS ({} times, {}ms)", trys, since_the_epoch.as_millis());
                 break;
             }
         }
