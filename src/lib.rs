@@ -19,7 +19,7 @@ mod tests {
         loop {
             trys = trys + 1;
             let out = x.raw_next();
-            if out == password.to_string() {
+            if out == password {
                 println!(">>> SUCCESS ({} times)", trys);
                 break;
             }
@@ -154,7 +154,7 @@ impl BruteForce {
 
     /// This returns the next element without unnecessary boxing in a Option
 
-    pub fn raw_next(&mut self) -> String {
+    pub fn raw_next(&mut self) -> &str {
         let current_chars = &self.current;
         let mut s: String = String::new();
         let len: usize = current_chars.len();
@@ -179,8 +179,8 @@ impl BruteForce {
             }
         }
 
-        self.current = s.clone();
-        return s;
+        self.current = s;
+        return &self.current;
     }
 
     fn are_next_chars_last(&self, chars: &String, start: usize) -> bool {
@@ -214,6 +214,6 @@ impl Iterator for BruteForce {
     type Item = String;
 
     fn next(&mut self) -> Option<String> {
-        Some(self.raw_next())
+        Some(self.raw_next().to_string())
     }
 }
