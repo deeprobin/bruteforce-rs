@@ -46,6 +46,25 @@ mod tests {
     fn bench_new(b: &mut Bencher) {
         b.iter(|| crate::BruteForce::new(crate::UPPERCASE_CHARS));
     }
+
+    #[test]
+    fn test_multibyte_char() {
+        //Subset of Basic Latin and Latin Extended-A
+        const TEST_CHARS: &'static [char] = &[
+            'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q',
+            'Ā', 'ā', 'Ă', 'ă', 'Ą', 'ą', 'Ć', 'ć', 'Ĉ', 'ĉ', 'Ċ', 'ċ', 'Č', 'č', 'Ď', 'ď', 'Đ',
+        ];
+        let mut x = crate::BruteForce::new(TEST_CHARS);
+        let password = "EGĀĎ";
+
+        for trys in 1.. {
+            let out = x.raw_next();
+            if out == password {
+                println!(">>> SUCCESS ({} times)", trys);
+                break;
+            }
+        }
+    }
 }
 
 /// Uppercase characters from `A` to `Z`
