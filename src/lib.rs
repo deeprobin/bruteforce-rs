@@ -65,6 +65,31 @@ mod tests {
             }
         }
     }
+
+    #[cfg(feature = "constants")]
+    #[test]
+    fn test_combined_charset() {
+        let charset=UPPERCASE_CHARS.iter()
+            .chain(LOWERCASE_CHARS)
+            .chain(NUMBER_CHARS)
+            //Takes too long...
+            .chain(SPECIAL_CHARS)
+            .map(|&c| c)
+            .collect::<Vec<char>>();
+
+        let mut x = crate::BruteForce::new(&charset);
+        //Use length<=3 and start with an early character to finish quickly...
+        let password = "Bb8";
+
+        for trys in 1.. {
+            let out = x.raw_next();
+            println!("{},{}",out,trys);
+            if out == password {
+                println!(">>> SUCCESS ({} times)", trys);
+                break;
+            }
+        }
+    }
 }
 
 /// Uppercase characters from `A` to `Z`
