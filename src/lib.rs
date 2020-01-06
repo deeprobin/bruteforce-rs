@@ -232,11 +232,8 @@ impl BruteForce {
     }
 
     fn next_char(&self, c: char) -> char {
-        if let Some(&ch) = self.chars.iter().skip_while(|&&ch| ch != c).nth(1) {
-            ch
-        } else {
-            self.chars[0]
-        }
+        self.chars.iter().skip_while(|&&ch| ch != c).nth(1).map(|&c| c)
+            .unwrap_or(self.chars[0])
     }
 
     fn is_last_char(&self, c: char) -> bool {
