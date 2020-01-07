@@ -23,7 +23,9 @@ mod tests {
     #[bench]
     fn bench_raw_next(b: &mut Bencher) {
         let mut brute_forcer = crate::BruteForce::new(crate::UPPERCASE_CHARS);
-        b.iter(|| {brute_forcer.raw_next();});
+        b.iter(|| {
+            brute_forcer.raw_next();
+        });
     }
 
     #[cfg(feature = "constants")]
@@ -62,7 +64,8 @@ mod tests {
     #[cfg(all(feature = "constants", feature = "std"))]
     #[test]
     fn test_combined_charset() {
-        let charset=UPPERCASE_CHARS.iter()
+        let charset = UPPERCASE_CHARS
+            .iter()
             .chain(LOWERCASE_CHARS)
             .chain(NUMBER_CHARS)
             //Takes too long...
@@ -76,7 +79,7 @@ mod tests {
 
         for trys in 1.. {
             let out = x.raw_next();
-            println!("{},{}",out,trys);
+            println!("{},{}", out, trys);
             if out == password {
                 println!(">>> SUCCESS ({} times)", trys);
                 break;
@@ -106,8 +109,8 @@ pub const NUMBER_CHARS: &'static [char] = &['0', '1', '2', '3', '4', '5', '6', '
 /// Most used special characters
 #[cfg(feature = "constants")]
 pub const SPECIAL_CHARS: &'static [char] = &[
-    '!', '\"', '\'', '?', '\\', '#', '$', '§', '%', '&', '/', '(', ')', '=', '[', ']',
-    '{', '}', '´', '`', '<', '>', '€', ',', '.', '-', '_',
+    '!', '\"', '\'', '?', '\\', '#', '$', '§', '%', '&', '/', '(', ')', '=', '[', ']', '{', '}',
+    '´', '`', '<', '>', '€', ',', '.', '-', '_',
 ];
 
 /// Represents a brute-forcing instance
@@ -119,7 +122,7 @@ pub struct BruteForce<'a> {
     pub current: String,
 
     /// Reversed representation of current where each element is an index of charset
-    raw_current: Vec<usize>
+    raw_current: Vec<usize>,
 }
 
 impl<'a> BruteForce<'a> {
@@ -148,7 +151,7 @@ impl<'a> BruteForce<'a> {
             chars: charset,
             current: String::default(),
             // Maybe the answer is an empty string?
-            raw_current: vec![]
+            raw_current: vec![],
         }
     }
 
@@ -208,8 +211,10 @@ impl<'a> BruteForce<'a> {
         BruteForce {
             chars: charset,
             current: String::default(),
-            raw_current: start_string.chars().rev()
-                .map(|c1| charset.iter().position(|&c2| c1==c2))
+            raw_current: start_string
+                .chars()
+                .rev()
+                .map(|c1| charset.iter().position(|&c2| c1 == c2))
                 .collect::<Option<Vec<usize>>>()
                 .expect("characters in start_string must exist in charset"),
         }
@@ -219,30 +224,30 @@ impl<'a> BruteForce<'a> {
     pub fn raw_next(&mut self) -> &str {
         // Generate self.current from self.raw_current
         // This doesn't allocate because it has no content.
-        let mut temp=String::default();
+        let mut temp = String::default();
         // Borrow splitting workaround. https://doc.rust-lang.org/nomicon/borrow-splitting.html
         std::mem::swap(&mut self.current, &mut temp);
         temp.clear();
-        temp.extend(
-            self.raw_current.iter().rev().map(|&i| {
-                assert!(i<self.chars.len(), "Bug: Invalid character index");
-                self.chars[i]
-            })
-        );
-        self.current=temp;
+        temp.extend(self.raw_current.iter().rev().map(|&i| {
+            assert!(i < self.chars.len(), "Bug: Invalid character index");
+            self.chars[i]
+        }));
+        self.current = temp;
 
         // "Add" 1 to self.raw_current
-        let mut carryover=true;
+        let mut carryover = true;
         for i in self.raw_current.iter_mut() {
-            *i+=1;
-            if *i==self.chars.len() {
-                *i=0;
+            *i += 1;
+            if *i == self.chars.len() {
+                *i = 0;
             } else {
-                carryover=false;
+                carryover = false;
                 break;
             }
         }
-        if carryover {self.raw_current.push(0);}
+        if carryover {
+            self.raw_current.push(0);
+        }
 
         &self.current
     }
