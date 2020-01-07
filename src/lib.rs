@@ -35,21 +35,6 @@ mod tests {
 
     #[cfg(feature = "constants")]
     #[bench]
-    fn bench_next_char(b: &mut Bencher) {
-        let brute_forcer = crate::BruteForce::new(crate::UPPERCASE_CHARS);
-        b.iter(|| brute_forcer.next_char('A'));
-    }
-
-    #[cfg(feature = "constants")]
-    #[bench]
-    fn bench_are_all_chars_last(b: &mut Bencher) {
-        let brute_forcer = crate::BruteForce::new(crate::UPPERCASE_CHARS);
-        let s = "ZZZZ".to_string();
-        b.iter(|| brute_forcer.are_all_chars_last(&s));
-    }
-
-    #[cfg(feature = "constants")]
-    #[bench]
     fn bench_new(b: &mut Bencher) {
         b.iter(|| crate::BruteForce::new(crate::UPPERCASE_CHARS));
     }
@@ -131,6 +116,9 @@ pub struct BruteForce<'a> {
 
     /// This is the current string
     pub current: String,
+
+    /// Reversed representation of current where each element is an index of charset
+    raw_current: Vec<usize>
 }
 
 impl<'a> BruteForce<'a> {
@@ -157,7 +145,9 @@ impl<'a> BruteForce<'a> {
     pub fn new(charset: &[char]) -> BruteForce {
         BruteForce {
             chars: charset,
-            current: charset[0].to_string(),
+            current: String::default(),
+            // Maybe the answer is an empty string?
+            raw_current: vec![]
         }
     }
 
@@ -184,15 +174,10 @@ impl<'a> BruteForce<'a> {
     /// }
     /// ```
     pub fn new_at(charset: &[char], start: usize) -> BruteForce {
-        let mut start_string = String::new();
-
-        for _ in 0..start {
-            start_string.push(charset[0]);
-        }
-
         BruteForce {
             chars: charset,
-            current: start_string,
+            current: String::default(),
+            raw_current: (0..start).map(|_| 0).collect::<Vec<usize>>(),
         }
     }
 
@@ -218,68 +203,47 @@ impl<'a> BruteForce<'a> {
     ///    }
     /// }
     /// ```
-    pub const fn new_by_start_string(charset: &[char], start_string: String) -> BruteForce {
+    pub fn new_by_start_string(charset: &[char], start_string: String) -> BruteForce {
         BruteForce {
             chars: charset,
-            current: start_string,
+            current: String::default(),
+            raw_current: start_string.chars().rev()
+                .map(|c1| charset.iter().position(|&c2| c1==c2))
+                .collect::<Option<Vec<usize>>>()
+                .expect("characters in start_string must exist in charset"),
         }
     }
 
     /// This returns the next element without unnecessary boxing in a Option
     pub fn raw_next(&mut self) -> &str {
-        let current_chars = &self.current;
-        let mut s: String = String::new();
-        let len: usize = current_chars.chars().count();
+        // Generate self.current from self.raw_current
+        // This doesn't allocate because it has no content.
+        let mut temp=String::default();
+        // Borrow splitting workaround. https://doc.rust-lang.org/nomicon/borrow-splitting.html
+        std::mem::swap(&mut self.current, &mut temp);
+        temp.clear();
+        temp.extend(
+            self.raw_current.iter().rev().map(|&i| {
+                assert!(i<self.chars.len(), "Bug: Invalid character index");
+                self.chars[i]
+            })
+        );
+        self.current=temp;
 
-        for (n, c) in current_chars.chars().enumerate() {
-            if n != (len - 1) {
-                if self.are_next_chars_last(current_chars, n + 1) {
-                    s.push(self.next_char(c));
-                } else {
-                    s.push(c);
-                }
-            } else if self.is_last_char(&c) {
-                if self.are_all_chars_last(current_chars) {
-                    s.push(self.first_char());
-
-                    s.push(self.first_char());
-                } else {
-                    s.push(self.first_char());
-                }
+        // "Add" 1 to self.raw_current
+        let mut carryover=true;
+        for i in self.raw_current.iter_mut() {
+            *i+=1;
+            if *i==self.chars.len() {
+                *i=0;
             } else {
-                s.push(self.next_char(c));
+                carryover=false;
+                break;
             }
         }
+        if carryover {self.raw_current.push(0);}
 
-        self.current = s;
-        return &self.current;
-    }
-
-    fn are_next_chars_last(&self, chars: &String, start: usize) -> bool {
-        chars.chars().skip(start).all(|c| self.is_last_char(&c))
-    }
-
-    #[inline]
-    fn are_all_chars_last(&self, chars: &String) -> bool {
-        self.are_next_chars_last(chars, 0)
-    }
-
-    fn next_char(&self, c: char) -> char {
-        self.chars.iter().skip_while(|&&ch| ch != c).nth(1).map(|&c| c)
-            .unwrap_or(self.chars[0])
-    }
-
-    #[inline]
-    fn is_last_char(&self, c: &char) -> bool {
-        &self.last_char() == c
-    }
-
-    const fn first_char(&self) -> char {
-        self.chars[0]
-    }
-
-    const fn last_char(&self) -> char {
-        self.chars[self.chars.len() - 1]
+        &self.current
     }
 }
 
