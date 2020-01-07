@@ -54,6 +54,7 @@ mod tests {
         b.iter(|| crate::BruteForce::new(crate::UPPERCASE_CHARS));
     }
 
+    #[cfg(feature = "std")]
     #[test]
     fn test_multibyte_char() {
         //Subset of Basic Latin and Latin Extended-A
@@ -73,7 +74,7 @@ mod tests {
         }
     }
 
-    #[cfg(feature = "constants")]
+    #[cfg(all(feature = "constants", feature = "std"))]
     #[test]
     fn test_combined_charset() {
         let charset=UPPERCASE_CHARS.iter()
