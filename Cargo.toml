@@ -1,6 +1,6 @@
 [package]
 name = "bruteforce"
-description = "A WIP rust bruteforce library"
+description = "This is a no_std-compatible zero-dependency brute force/string generation rust-nightly library"
 version = "0.1.3"
 authors = ["Robin Lindner <robin@deeprobin.de>"]
 edition = "2018"
