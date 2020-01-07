@@ -21,6 +21,13 @@ mod tests {
 
     #[cfg(feature = "constants")]
     #[bench]
+    fn bench_raw_next(b: &mut Bencher) {
+        let mut brute_forcer = crate::BruteForce::new(crate::UPPERCASE_CHARS);
+        b.iter(|| {brute_forcer.raw_next();});
+    }
+
+    #[cfg(feature = "constants")]
+    #[bench]
     fn bench_next(b: &mut Bencher) {
         let mut brute_forcer = crate::BruteForce::new(crate::UPPERCASE_CHARS);
         b.iter(|| brute_forcer.next());
