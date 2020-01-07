@@ -238,7 +238,7 @@ impl<'a> BruteForce<'a> {
                 } else {
                     s.push(c);
                 }
-            } else if self.is_last_char(c) {
+            } else if self.is_last_char(&c) {
                 if self.are_all_chars_last(current_chars) {
                     s.push(self.first_char());
 
@@ -256,7 +256,7 @@ impl<'a> BruteForce<'a> {
     }
 
     fn are_next_chars_last(&self, chars: &String, start: usize) -> bool {
-        chars.chars().skip(start).all(|c| self.is_last_char(c))
+        chars.chars().skip(start).all(|c| self.is_last_char(&c))
     }
 
     #[inline]
@@ -270,8 +270,8 @@ impl<'a> BruteForce<'a> {
     }
 
     #[inline]
-    fn is_last_char(&self, c: char) -> bool {
-        self.last_char() == c
+    fn is_last_char(&self, c: &char) -> bool {
+        &self.last_char() == c
     }
 
     const fn first_char(&self) -> char {
