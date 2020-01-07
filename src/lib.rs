@@ -259,6 +259,7 @@ impl<'a> BruteForce<'a> {
         chars.chars().skip(start).all(|c| self.is_last_char(c))
     }
 
+    #[inline]
     fn are_all_chars_last(&self, chars: &String) -> bool {
         self.are_next_chars_last(chars, 0)
     }
@@ -268,6 +269,7 @@ impl<'a> BruteForce<'a> {
             .unwrap_or(self.chars[0])
     }
 
+    #[inline]
     fn is_last_char(&self, c: char) -> bool {
         self.last_char() == c
     }
