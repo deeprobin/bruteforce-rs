@@ -19,7 +19,7 @@ bruteforce = "0.1.3"
 
 ## Example
 
-```rs
+```rust
 use bruteforce::BruteForce;
 let mut brute_forcer = BruteForce::new(bruteforce::UPPERCASE_CHARS);
 
