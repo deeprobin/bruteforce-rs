@@ -178,7 +178,7 @@ impl<'a> BruteForce<'a> {
     /// }
     /// ```
     pub fn new_at(charset: &[char], start: usize) -> BruteForce {
-        BruteForce {
+        BruteForce { 
             chars: charset,
             current: String::default(),
             raw_current: (0..start).map(|_| 0).collect::<Vec<usize>>(),
