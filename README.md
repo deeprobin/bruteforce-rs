@@ -39,4 +39,3 @@ if s == password.to_string() {
   
 
 If you want you can contribute. We need people, who write a better documentation, optimize algorithms, implement more algorithms, finding bugs or submitting ideas.
-You can see, we use emojis for our commits. Please read this [emoji guide](https://gitmoji.carloscuesta.me/) before you commit. Thank you.

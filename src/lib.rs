@@ -5,6 +5,7 @@
 #![crate_name = "bruteforce"]
 #![feature(const_fn)]
 #![feature(test)]
+#![feature(generators, generator_trait)]
 #![cfg_attr(not(feature = "std"), no_std)]
 
 extern crate test;
