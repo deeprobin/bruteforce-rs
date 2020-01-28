@@ -20,26 +20,30 @@ mod tests {
     use super::*;
     use test::Bencher;
 
-    #[cfg(feature = "constants")]
+    const BENCH_CHARS: &'static [char] = &[
+        'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q',
+        'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's',
+        't', 'u', 'v', 'w', 'x', 'y', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '!', '\"', '\'', '?', '\\', '#', '$', '§', '%', '&', '/', '(', ')', '=', '[', ']', '{', '}',
+        '´', '`', '<', '>', '€', ',', '.', '-', '_'];
+
     #[bench]
     fn bench_raw_next(b: &mut Bencher) {
-        let mut brute_forcer = crate::BruteForce::new(crate::UPPERCASE_CHARS);
+        
+        let mut brute_forcer = crate::BruteForce::new(BENCH_CHARS);
         b.iter(|| {
             brute_forcer.raw_next();
         });
     }
 
-    #[cfg(feature = "constants")]
     #[bench]
     fn bench_next(b: &mut Bencher) {
-        let mut brute_forcer = crate::BruteForce::new(crate::UPPERCASE_CHARS);
+        let mut brute_forcer = crate::BruteForce::new(BENCH_CHARS);
         b.iter(|| brute_forcer.next());
     }
 
-    #[cfg(feature = "constants")]
     #[bench]
     fn bench_new(b: &mut Bencher) {
-        b.iter(|| crate::BruteForce::new(crate::UPPERCASE_CHARS));
+        b.iter(|| crate::BruteForce::new(BENCH_CHARS));
     }
 
     #[cfg(feature = "std")]
@@ -137,7 +141,8 @@ impl<'a> BruteForce<'a> {
     ///
     /// ```rust
     /// use bruteforce::BruteForce;
-    /// let mut brute_forcer = BruteForce::new(bruteforce::UPPERCASE_CHARS);
+    /// const CHARSET: &'static [char] = &['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
+    /// let mut brute_forcer = BruteForce::new(CHARSET);
     ///
     /// const password: &'static str = "PASS";
     /// for s in brute_forcer {
@@ -168,7 +173,8 @@ impl<'a> BruteForce<'a> {
     /// ```rust
     /// // This example will take less time, because we know the password length
     /// use bruteforce::BruteForce;
-    /// let mut brute_forcer = BruteForce::new_at(bruteforce::UPPERCASE_CHARS, 4);
+    /// const CHARSET: &'static [char] = &['A', 'B', 'C', 'P', 'S']; // all possible characters
+    /// let mut brute_forcer = BruteForce::new_at(CHARSET, 4);
     ///
     /// const password: &'static str = "PASS";
     /// for s in brute_forcer {
@@ -198,8 +204,9 @@ impl<'a> BruteForce<'a> {
     /// ```rust
     /// // This could be useful if we want to save our brute force progress and resume it later
     /// use bruteforce::BruteForce;
-    /// let mut brute_forcer = BruteForce::new_by_start_string(bruteforce::UPPERCASE_CHARS, "CCCC".to_string());
-    ///
+    /// const CHARSET: &'static [char] = &['A', 'B', 'C', 'P', 'S']; // all possible characters
+    /// let mut brute_forcer = BruteForce::new_by_start_string(CHARSET, "CCCC".to_string());
+    /// 
     /// const password: &'static str = "PASS";
     /// for s in brute_forcer {
     /// if s == password.to_string() {
