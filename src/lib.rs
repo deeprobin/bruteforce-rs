@@ -4,6 +4,7 @@
 
 #![crate_name = "bruteforce"]
 #![feature(const_fn)]
+#![feature(vec_leak)]
 #![feature(test)]
 #![feature(generators, generator_trait)]
 #![cfg_attr(not(feature = "std"), no_std)]
@@ -20,16 +21,16 @@ mod tests {
     use super::*;
     use test::Bencher;
 
-    const BENCH_CHARS: &'static [char] = &[
+    const BENCH_CHARS: Charset = Charset::new(&[
         'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q',
         'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's',
         't', 'u', 'v', 'w', 'x', 'y', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '!', '\"', '\'', '?', '\\', '#', '$', '§', '%', '&', '/', '(', ')', '=', '[', ']', '{', '}',
-        '´', '`', '<', '>', '€', ',', '.', '-', '_'];
+        '´', '`', '<', '>', '€', ',', '.', '-', '_']);
 
     #[bench]
     fn bench_raw_next(b: &mut Bencher) {
         
-        let mut brute_forcer = crate::BruteForce::new(BENCH_CHARS);
+        let mut brute_forcer = BruteForce::new(BENCH_CHARS);
         b.iter(|| {
             brute_forcer.raw_next();
         });
@@ -37,24 +38,51 @@ mod tests {
 
     #[bench]
     fn bench_next(b: &mut Bencher) {
-        let mut brute_forcer = crate::BruteForce::new(BENCH_CHARS);
+        let mut brute_forcer = BruteForce::new(BENCH_CHARS);
         b.iter(|| brute_forcer.next());
     }
 
     #[bench]
     fn bench_new(b: &mut Bencher) {
-        b.iter(|| crate::BruteForce::new(BENCH_CHARS));
+        b.iter(|| BruteForce::new(BENCH_CHARS));
+    }
+
+    #[bench]
+    fn bench_charset_new(b: &mut Bencher) {
+        b.iter(|| Charset::new(&[
+            'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q',
+            'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's',
+            't', 'u', 'v', 'w', 'x', 'y', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '!', '\"', '\'', '?', '\\', '#', '$', '§', '%', '&', '/', '(', ')', '=', '[', ']', '{', '}',
+            '´', '`', '<', '>', '€', ',', '.', '-', '_']));
+    }
+
+    #[bench]
+    fn bench_charset_new_by_str(b: &mut Bencher) {
+            b.iter(|| Charset::new_by_str("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!\"\'?\\$§%&/()=[]{}´`<>€,.-_"));
+    }
+
+    #[bench]
+    fn bench_charset_concat(b: &mut Bencher) {
+        let mut c1 = Charset::new_by_str("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+        let c2 = Charset::new_by_str("abcdefghijklmnopqrstuvwxyz0123456789");
+            
+        b.iter(|| c1.concat(c2));
+    }
+
+    #[bench]
+    fn bench_charset_to_string(b: &mut Bencher) {
+        b.iter(|| BENCH_CHARS.to_string());
     }
 
     #[cfg(feature = "std")]
     #[test]
     fn test_multibyte_char() {
         //Subset of Basic Latin and Latin Extended-A
-        const TEST_CHARS: &'static [char] = &[
+        const TEST_CHARS: Charset = Charset::new(&[
             'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q',
             'Ā', 'ā', 'Ă', 'ă', 'Ą', 'ą', 'Ć', 'ć', 'Ĉ', 'ĉ', 'Ċ', 'ċ', 'Č', 'č', 'Ď', 'ď', 'Đ',
-        ];
-        let mut x = crate::BruteForce::new(TEST_CHARS);
+        ]);
+        let mut x = BruteForce::new(TEST_CHARS);
         let password = "EGĀĎ";
 
         for trys in 1.. {
@@ -69,16 +97,9 @@ mod tests {
     #[cfg(all(feature = "constants", feature = "std"))]
     #[test]
     fn test_combined_charset() {
-        let charset = UPPERCASE_CHARS
-            .iter()
-            .chain(LOWERCASE_CHARS)
-            .chain(NUMBER_CHARS)
-            //Takes too long...
-            .chain(SPECIAL_CHARS)
-            .map(|&c| c)
-            .collect::<Vec<char>>();
+        let charset = UPPERCASE_CHARS.concat(LOWERCASE_CHARS).concat(NUMBER_CHARS).concat(SPECIAL_CHARS);
 
-        let mut x = crate::BruteForce::new(&charset);
+        let mut x = BruteForce::new(charset);
         //Use length<=3 and start with an early character to finish quickly...
         let password = "Bb8";
 
@@ -93,35 +114,39 @@ mod tests {
     }
 }
 
+pub mod charset;
+
+use charset::Charset;
+
 /// Uppercase characters from `A` to `Z`
 #[cfg(feature = "constants")]
-pub const UPPERCASE_CHARS: &'static [char] = &[
+pub const UPPERCASE_CHARS: Charset = Charset::new(&[
     'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S',
     'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
-];
+]);
 
 /// Lowercase characters from `a` to `z`
 #[cfg(feature = "constants")]
-pub const LOWERCASE_CHARS: &'static [char] = &[
+pub const LOWERCASE_CHARS: Charset = Charset::new(&[
     'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's',
     't', 'u', 'v', 'w', 'x', 'y', 'z',
-];
+]);
 
 /// Number characters from `0` to `9`
 #[cfg(feature = "constants")]
-pub const NUMBER_CHARS: &'static [char] = &['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+pub const NUMBER_CHARS: Charset = Charset::new(&['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']);
 
 /// Most used special characters
 #[cfg(feature = "constants")]
-pub const SPECIAL_CHARS: &'static [char] = &[
+pub const SPECIAL_CHARS: Charset = Charset::new(&[
     '!', '\"', '\'', '?', '\\', '#', '$', '§', '%', '&', '/', '(', ')', '=', '[', ']', '{', '}',
     '´', '`', '<', '>', '€', ',', '.', '-', '_',
-];
+]);
 
 /// Represents a brute-forcing instance
 pub struct BruteForce<'a> {
     /// Represents the charset of the brute-forcer
-    pub chars: &'a [char],
+    pub chars: Charset<'a>,
 
     /// This is the current string
     pub current: String,
@@ -141,7 +166,8 @@ impl<'a> BruteForce<'a> {
     ///
     /// ```rust
     /// use bruteforce::BruteForce;
-    /// const CHARSET: &'static [char] = &['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
+    /// use bruteforce::charset::Charset;
+    /// const CHARSET: Charset = Charset::new(&['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']);
     /// let mut brute_forcer = BruteForce::new(CHARSET);
     ///
     /// const password: &'static str = "PASS";
@@ -152,7 +178,7 @@ impl<'a> BruteForce<'a> {
     ///    }
     /// }
     /// ```
-    pub fn new(charset: &[char]) -> BruteForce {
+    pub fn new(charset: Charset) -> BruteForce {
         BruteForce {
             chars: charset,
             current: String::default(),
@@ -162,7 +188,7 @@ impl<'a> BruteForce<'a> {
     }
 
     /// Returns a brute forcer skipping some letters
-    /// ///
+    /// 
     /// # Arguments
     ///
     /// * `charset` - A char array that contains all chars to be tried
@@ -173,7 +199,8 @@ impl<'a> BruteForce<'a> {
     /// ```rust
     /// // This example will take less time, because we know the password length
     /// use bruteforce::BruteForce;
-    /// const CHARSET: &'static [char] = &['A', 'B', 'C', 'P', 'S']; // all possible characters
+    /// use bruteforce::charset::Charset;
+    /// const CHARSET: Charset = Charset::new(&['A', 'B', 'C', 'P', 'S']); // all possible characters
     /// let mut brute_forcer = BruteForce::new_at(CHARSET, 4);
     ///
     /// const password: &'static str = "PASS";
@@ -184,7 +211,7 @@ impl<'a> BruteForce<'a> {
     ///    }
     /// }
     /// ```
-    pub fn new_at(charset: &[char], start: usize) -> BruteForce {
+    pub fn new_at(charset: Charset, start: usize) -> BruteForce {
         BruteForce { 
             chars: charset,
             current: String::default(),
@@ -193,7 +220,7 @@ impl<'a> BruteForce<'a> {
     }
 
     /// Returns a brute forcer skipping some text
-    /// ///
+    ///
     /// # Arguments
     ///
     /// * `charset` - A char array that contains all chars to be tried
@@ -204,7 +231,8 @@ impl<'a> BruteForce<'a> {
     /// ```rust
     /// // This could be useful if we want to save our brute force progress and resume it later
     /// use bruteforce::BruteForce;
-    /// const CHARSET: &'static [char] = &['A', 'B', 'C', 'P', 'S']; // all possible characters
+    /// use bruteforce::charset::Charset;
+    /// const CHARSET: Charset = Charset::new(&['A', 'B', 'C', 'P', 'S']); // all possible characters
     /// let mut brute_forcer = BruteForce::new_by_start_string(CHARSET, "CCCC".to_string());
     /// 
     /// const password: &'static str = "PASS";
@@ -215,7 +243,7 @@ impl<'a> BruteForce<'a> {
     ///    }
     /// }
     /// ```
-    pub fn new_by_start_string(charset: &[char], start_string: String) -> BruteForce {
+    pub fn new_by_start_string(charset: Charset, start_string: String) -> BruteForce {
         BruteForce {
             chars: charset,
             current: String::default(),
