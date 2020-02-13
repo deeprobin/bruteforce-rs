@@ -16,6 +16,12 @@ extern crate no_std_compat as std;
 
 use std::prelude::v1::*;
 
+use charset::Charset;
+use std::ops::{Generator, GeneratorState};
+use std::pin::Pin;
+
+pub mod charset;
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -113,10 +119,6 @@ mod tests {
         }
     }
 }
-
-pub mod charset;
-
-use charset::Charset;
 
 /// Uppercase characters from `A` to `Z`
 #[cfg(feature = "constants")]
@@ -294,5 +296,14 @@ impl<'a> Iterator for BruteForce<'a> {
 
     fn next(&mut self) -> Option<String> {
         Some(self.raw_next().to_string())
+    }
+}
+
+impl Generator for Pin<&mut BruteForce<'_>> {
+    type Yield = String;
+    type Return = ();
+
+    fn resume(self: Pin<&mut Self>) -> GeneratorState<Self::Yield, Self::Return> {
+        GeneratorState::Yielded(self.get_mut().raw_next().to_string())
     }
 }
