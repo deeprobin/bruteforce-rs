@@ -11,7 +11,7 @@ This is a no_std-compatible zero-dependency* brute force/string generation rust-
 ```toml
 
 [dependencies]
-bruteforce = "0.1.4"
+bruteforce = "0.1.5"
 
 ```
 
