@@ -35,6 +35,12 @@ impl<'a> Charset<'a> {
         self.chars.len()
     }
 
+    /// If the length of the internal char slice is zero, this will return true
+    #[inline]
+    pub const fn is_empty(&self) -> bool {
+        self.len() == 0
+    }
+
     /// This function returns the iterator of the internal char slice
     pub fn iter(&self) -> Iter<'_, char> {
         self.chars.iter()

@@ -1,8 +1,15 @@
 # bruteforce
 
+![Crates.io](https://img.shields.io/crates/v/bruteforce?style=flat-square)
+![Crates.io](https://img.shields.io/crates/l/bruteforce?style=flat-square)
+![Codacy grade](https://img.shields.io/codacy/grade/6d381bdf373e4205bfd0d23876acb07d?style=flat-square)
+
+![GitHub Workflow Status](https://img.shields.io/github/workflow/status/DeepRobin/bruteforce-rs/CI?style=flat-square)
+![GitHub issues](https://img.shields.io/github/issues/DeepRobin/bruteforce-rs?style=flat-square)
+
 This is a no_std-compatible zero-dependency* brute force/string generation rust-nightly library.
-* [Docs - docs.rs](https://docs.rs/bruteforce/)
-* [Crate information - crates.io](https://crates.io/crates/bruteforce/)
+  * [Docs - docs.rs](https://docs.rs/bruteforce/)
+  * [Crate information - crates.io](https://crates.io/crates/bruteforce/)
 
 \* = zero-dependency if std is included  
 
@@ -11,11 +18,9 @@ This is a no_std-compatible zero-dependency* brute force/string generation rust-
 ```toml
 
 [dependencies]
-bruteforce = "0.1.5"
+bruteforce = "0.1.6"
 
 ```
-
-  
 
 ## Example
 
@@ -32,10 +37,6 @@ if s == password.to_string() {
 }
 ```
 
-  
-
-## Contribution
-
-  
+## Contribution  
 
 If you want you can contribute. We need people, who write a better documentation, optimize algorithms, implement more algorithms, finding bugs or submitting ideas.
