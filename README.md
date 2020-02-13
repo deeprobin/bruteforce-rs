@@ -8,6 +8,7 @@
 ![GitHub issues](https://img.shields.io/github/issues/DeepRobin/bruteforce-rs?style=flat-square)
 
 This is a no_std-compatible zero-dependency* brute force/string generation rust-nightly library.
+
 * [Docs - docs.rs](https://docs.rs/bruteforce/)
 * [Crate information - crates.io](https://crates.io/crates/bruteforce/)
 
@@ -39,4 +40,4 @@ if s == password.to_string() {
 
 ## Contribution  
 
-If you want you can contribute. We need people, who write a better documentation, optimize algorithms, implement more algorithms, finding bugs or submitting ideas.
+If you want you can contribute. We need people, who write better documentation, optimize algorithms, implement more algorithms, finding bugs or submitting ideas.
