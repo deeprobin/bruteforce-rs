@@ -1,9 +1,9 @@
 use std::prelude::v1::*; // needed for std-compat
 
-use std::ops::Index;
-use std::string::ToString;
 use std::convert::From;
+use std::ops::Index;
 use std::slice::Iter;
+use std::string::ToString;
 
 /// The charset representation for bruteforce
 #[derive(Debug, Copy, Clone)]
@@ -14,9 +14,7 @@ pub struct Charset<'a> {
 impl<'a> Charset<'a> {
     /// This creates a new charset by a defined slice of chars in compile-time
     pub const fn new(charset: &[char]) -> Charset {
-        Charset {
-            chars: charset,
-        }
+        Charset { chars: charset }
     }
 
     /// This function creates a charset by &str
