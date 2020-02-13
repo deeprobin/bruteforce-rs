@@ -9,8 +9,8 @@
 
 This is a no_std-compatible zero-dependency* brute force/string generation rust-nightly library.
 
-* [Docs - docs.rs](https://docs.rs/bruteforce/)
-* [Crate information - crates.io](https://crates.io/crates/bruteforce/)
+*   [Docs - docs.rs](https://docs.rs/bruteforce/)
+*   [Crate information - crates.io](https://crates.io/crates/bruteforce/)
 
 \* = zero-dependency if std is included  
 
