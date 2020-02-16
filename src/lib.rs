@@ -1,11 +1,15 @@
 //! This is the documentation for the `bruteforce` crate
+//!
 //! It has also no-std support.
+//!
 //! It is ready to get implemented to your projects
 
 #![crate_name = "bruteforce"]
 #![feature(const_fn)]
 #![feature(test)]
 #![feature(generators, generator_trait)]
+#![feature(const_if_match)]
+#![feature(const_panic)]
 #![cfg_attr(not(feature = "std"), no_std)]
 
 extern crate test;
@@ -132,6 +136,8 @@ mod tests {
 }
 
 /// Uppercase characters from `A` to `Z`
+///
+/// `ABCDEFGHIJKLMNOPQRSTUVWXYZ`
 #[cfg(feature = "constants")]
 pub const UPPERCASE_CHARS: Charset = Charset::new(&[
     'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S',
@@ -139,6 +145,8 @@ pub const UPPERCASE_CHARS: Charset = Charset::new(&[
 ]);
 
 /// Lowercase characters from `a` to `z`
+///
+/// `abcdefghijklmnopqrstuvwxyz`
 #[cfg(feature = "constants")]
 pub const LOWERCASE_CHARS: Charset = Charset::new(&[
     'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's',
@@ -146,6 +154,8 @@ pub const LOWERCASE_CHARS: Charset = Charset::new(&[
 ]);
 
 /// Number characters from `0` to `9`
+///
+/// `0123456789`
 #[cfg(feature = "constants")]
 pub const NUMBER_CHARS: Charset = Charset::new(&['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']);
 

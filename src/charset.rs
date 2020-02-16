@@ -5,6 +5,11 @@ use std::ops::Index;
 use std::slice::Iter;
 
 /// The charset representation for bruteforce
+///
+/// # Example
+/// ```rust
+/// let uppercase_alphabeth = Charset::from("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+/// ```
 #[derive(Debug, Clone)]
 pub struct Charset<'a> {
     chars: Cow<'a, [char]>,
@@ -12,14 +17,44 @@ pub struct Charset<'a> {
 
 impl<'a> Charset<'a> {
     /// This creates a new charset by a defined slice of chars in compile-time
+    ///
+    /// # Arguments
+    ///
+    /// * `charset` - A char slice which contains the chars
+    ///
+    /// # Examples
+    /// ```rust
+    /// Charset::new(&['A', 'B', 'C', 'D', 'E']);
+    /// ```
     pub const fn new(charset: &[char]) -> Charset {
+        debug_assert!(
+            charset.len() != 0,
+            "The [char] must contain at least one character"
+        );
         Charset {
             chars: Cow::Borrowed(charset),
         }
     }
 
     /// This function creates a charset by &str
+    ///
+    /// # Arguments
+    ///
+    /// * `s` - The char slice from `new` but easier to write
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// Charset::new_by_str("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+    ///
+    /// // But it is recommended to write:
+    /// Charset::from("ABCDEFGHIJKLMNOPRSTUVWXYZ");
+    /// ```
     pub fn new_by_str(s: &str) -> Charset<'a> {
+        debug_assert!(
+            s.len() != 0,
+            "The string must contain at least one character"
+        );
         let vec = s.chars().collect::<Vec<char>>();
         Charset {
             chars: Cow::Owned(vec),
@@ -27,6 +62,20 @@ impl<'a> Charset<'a> {
     }
 
     /// This function concat's 2 charsets
+    ///
+    /// # Arguments
+    ///
+    /// `self`
+    ///
+    /// `other` - Pointer to other charset
+    ///
+    /// # Example
+    ///
+    /// ```rust
+    /// let foo = Charset::from("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+    /// let bar = Charset::from("abcdefghijklmnopqrstuvwxyz");
+    /// let result = foo.concat(&bar);
+    /// ```
     pub fn concat(&self, other: &Charset) -> Charset<'a> {
         let mut s = self.clone();
         for &ch in other.iter() {
@@ -38,17 +87,26 @@ impl<'a> Charset<'a> {
     }
 
     /// This function returns the length of the internal char slice
+    ///
+    /// # Example
+    /// ```rust
+    /// let charset = Charset::from("ABCDEF");
+    /// charset.len(); // = 6
+    /// ```
     pub fn len(&self) -> usize {
         self.chars.len()
     }
 
     /// If the length of the internal char slice is zero, this will return true
+    ///
+    /// This function returns in all cases true, because the minimum size of the internal slice is 1
     #[inline]
+    #[cold]
     pub fn is_empty(&self) -> bool {
         self.chars.is_empty()
     }
 
-    /// This function returns the iterator of the internal char slice
+    /// This function returns the immutable iterator of the internal char slice
     pub fn iter(&self) -> Iter<'_, char> {
         self.chars.iter()
     }
