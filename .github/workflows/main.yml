@@ -13,7 +13,7 @@ jobs:
 
       - name: Install Rust nightly
         run: |
-          rustup toolchain update --no-self-update nightly
+          rustup toolchain update --no-self-update 1.41.0-nightly
           rustup default nightly
           rustup component add clippy rustfmt
       - name: Run rustfmt
