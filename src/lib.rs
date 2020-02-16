@@ -75,10 +75,10 @@ mod tests {
 
     #[bench]
     fn bench_charset_concat(b: &mut Bencher) {
-        let mut c1 = Charset::new_by_str("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+        let c1 = Charset::new_by_str("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
         let c2 = Charset::new_by_str("abcdefghijklmnopqrstuvwxyz0123456789");
 
-        b.iter(|| c1.concat(c2));
+        b.iter(|| c1.concat(&c2));
     }
 
     #[bench]
@@ -110,9 +110,9 @@ mod tests {
     #[test]
     fn test_combined_charset() {
         let charset = UPPERCASE_CHARS
-            .concat(LOWERCASE_CHARS)
-            .concat(NUMBER_CHARS)
-            .concat(SPECIAL_CHARS);
+            .concat(&LOWERCASE_CHARS)
+            .concat(&NUMBER_CHARS)
+            .concat(&SPECIAL_CHARS);
 
         let mut x = BruteForce::new(charset);
         //Use length<=3 and start with an early character to finish quickly...
@@ -256,7 +256,6 @@ impl<'a> BruteForce<'a> {
     /// ```
     pub fn new_by_start_string(charset: Charset, start_string: String) -> BruteForce {
         BruteForce {
-            chars: charset,
             current: String::default(),
             raw_current: start_string
                 .chars()
@@ -264,6 +263,8 @@ impl<'a> BruteForce<'a> {
                 .map(|c1| charset.iter().position(|&c2| c1 == c2))
                 .collect::<Option<Vec<usize>>>()
                 .expect("characters in start_string must exist in charset"),
+            // assigning charset to chars must happen after it is used by .map()
+            chars: charset,
         }
     }
 
