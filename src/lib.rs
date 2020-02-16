@@ -17,9 +17,7 @@ extern crate no_std_compat as std;
 use std::prelude::v1::*;
 
 use charset::Charset;
-#[cfg(target_env = "msvc")]
 use std::ops::{Generator, GeneratorState};
-#[cfg(target_env = "msvc")]
 use std::pin::Pin;
 
 pub mod charset;
@@ -311,7 +309,17 @@ impl<'a> Iterator for BruteForce<'a> {
     }
 }
 
-#[cfg(target_env = "msvc")]
+#[cfg(bootstrap)]
+impl<R> Generator<R> for Pin<&mut BruteForce<'_>> {
+    type Yield = String;
+    type Return = ();
+
+    fn resume(self: Pin<&mut Self>, _arg: R) -> GeneratorState<Self::Yield, Self::Return> {
+        GeneratorState::Yielded(self.get_mut().raw_next().to_string())
+    }
+}
+
+#[cfg(not(bootstrap))]
 impl Generator for Pin<&mut BruteForce<'_>> {
     type Yield = String;
     type Return = ();
@@ -320,3 +328,4 @@ impl Generator for Pin<&mut BruteForce<'_>> {
         GeneratorState::Yielded(self.get_mut().raw_next().to_string())
     }
 }
+
