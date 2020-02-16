@@ -1,44 +1,52 @@
 use std::prelude::v1::*; // needed for std-compat
 
-use std::convert::From;
+use std::borrow::Cow;
 use std::ops::Index;
 use std::slice::Iter;
 use std::string::ToString;
 
 /// The charset representation for bruteforce
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Clone)]
 pub struct Charset<'a> {
-    chars: &'a [char],
+    chars: Cow<'a, [char]>,
 }
 
 impl<'a> Charset<'a> {
     /// This creates a new charset by a defined slice of chars in compile-time
     pub const fn new(charset: &[char]) -> Charset {
-        Charset { chars: charset }
+        Charset {
+            chars: Cow::Borrowed(charset),
+        }
     }
 
     /// This function creates a charset by &str
-    pub fn new_by_str(s: &'a str) -> Charset<'a> {
+    pub fn new_by_str(s: &str) -> Charset<'a> {
         let vec = s.chars().collect::<Vec<char>>();
         Charset {
-            chars: Vec::leak(vec),
+            chars: Cow::Owned(vec),
         }
     }
 
     /// This function concat's 2 charsets
-    pub fn concat(&mut self, other: Charset) -> Charset<'a> {
-        Charset::from(concat_charset_strings(self.to_string(), other.to_string()))
+    pub fn concat(&self, other: &Charset) -> Charset<'a> {
+        let mut s = self.clone();
+        for &ch in other.iter() {
+            if !s.chars.contains(&ch) {
+                s.chars.to_mut().push(ch);
+            }
+        }
+        s
     }
 
     /// This function returns the length of the internal char slice
-    pub const fn len(&self) -> usize {
+    pub fn len(&self) -> usize {
         self.chars.len()
     }
 
     /// If the length of the internal char slice is zero, this will return true
     #[inline]
-    pub const fn is_empty(&self) -> bool {
-        self.len() == 0
+    pub fn is_empty(&self) -> bool {
+        self.chars.is_empty()
     }
 
     /// This function returns the iterator of the internal char slice
@@ -55,34 +63,24 @@ impl Index<usize> for Charset<'_> {
     }
 }
 
-impl<'a> From<&'a str> for Charset<'a> {
+impl<'a> From<&'a str> for Charset<'_> {
     fn from(input: &'a str) -> Self {
-        Charset::new_by_str(input)
+        Self::new_by_str(input)
     }
 }
 
 impl From<String> for Charset<'_> {
     fn from(s: String) -> Self {
-        Charset::new_by_str(Box::leak(s.into_boxed_str()))
+        s.as_str().into()
     }
 }
 
 impl ToString for Charset<'_> {
     fn to_string(&self) -> String {
         let mut s = String::default();
-        for ch in self.chars {
+        for ch in self.iter() {
             s.push(*ch);
         }
         s
     }
-}
-
-fn concat_charset_strings(s1: String, s2: String) -> String {
-    let mut s = s1;
-    for ch in s2.chars() {
-        if !s.contains(ch) {
-            s.push(ch);
-        }
-    }
-    s
 }
