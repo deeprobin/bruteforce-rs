@@ -4,7 +4,6 @@
 
 #![crate_name = "bruteforce"]
 #![feature(const_fn)]
-#![feature(vec_leak)]
 #![feature(test)]
 #![feature(generators, generator_trait)]
 #![cfg_attr(not(feature = "std"), no_std)]
@@ -14,10 +13,13 @@ extern crate test;
 #[cfg(not(feature = "std"))]
 extern crate no_std_compat as std;
 
+use charset::Charset;
 use std::prelude::v1::*;
 
-use charset::Charset;
+#[cfg(feature = "generators")]
 use std::ops::{Generator, GeneratorState};
+
+#[cfg(feature = "generators")]
 use std::pin::Pin;
 
 pub mod charset;
@@ -309,17 +311,7 @@ impl<'a> Iterator for BruteForce<'a> {
     }
 }
 
-#[cfg(bootstrap)]
-impl<R> Generator<R> for Pin<&mut BruteForce<'_>> {
-    type Yield = String;
-    type Return = ();
-
-    fn resume(self: Pin<&mut Self>, _arg: R) -> GeneratorState<Self::Yield, Self::Return> {
-        GeneratorState::Yielded(self.get_mut().raw_next().to_string())
-    }
-}
-
-#[cfg(not(bootstrap))]
+#[cfg(feature = "generators")]
 impl Generator for Pin<&mut BruteForce<'_>> {
     type Yield = String;
     type Return = ();
@@ -328,4 +320,3 @@ impl Generator for Pin<&mut BruteForce<'_>> {
         GeneratorState::Yielded(self.get_mut().raw_next().to_string())
     }
 }
-

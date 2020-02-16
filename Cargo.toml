@@ -23,3 +23,4 @@ no-std-compat = { version = "0.3.0", features = [ "alloc" ] }
 default = [ "std", "constants" ]
 constants = []
 std = [ "no-std-compat/std", "no-std-compat/unstable" ]
+generators = []
