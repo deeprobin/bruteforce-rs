@@ -311,7 +311,6 @@ impl<'a> Iterator for BruteForce<'a> {
     }
 }
 
-
 #[cfg(target_env = "msvc")]
 impl Generator for Pin<&mut BruteForce<'_>> {
     type Yield = String;
