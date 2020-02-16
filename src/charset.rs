@@ -3,7 +3,6 @@ use std::prelude::v1::*; // needed for std-compat
 use std::convert::From;
 use std::ops::Index;
 use std::slice::Iter;
-use std::string::ToString;
 
 /// The charset representation for bruteforce
 #[derive(Debug, Copy, Clone)]
@@ -67,13 +66,9 @@ impl From<String> for Charset<'_> {
     }
 }
 
-impl ToString for Charset<'_> {
-    fn to_string(&self) -> String {
-        let mut s = String::default();
-        for ch in self.chars {
-            s.push(*ch);
-        }
-        s
+impl std::fmt::Display for Charset<'_> {
+    fn fmt(&self, fmt: &mut std::fmt::Formatter) -> Result<(), std::fmt::Error> {
+        self.chars.iter().try_for_each(|&c| write!(fmt, "{}", c))
     }
 }
 
