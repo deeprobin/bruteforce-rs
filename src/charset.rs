@@ -2,12 +2,16 @@ use std::prelude::v1::*; // needed for std-compat
 
 use std::borrow::Cow;
 use std::ops::Index;
+use std::ops::RangeInclusive;
 use std::slice::Iter;
 
 /// The charset representation for bruteforce
 ///
 /// # Example
+///
 /// ```rust
+/// use bruteforce::charset::Charset;
+///
 /// let uppercase_alphabeth = Charset::from("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
 /// ```
 #[derive(Debug, Clone)]
@@ -23,7 +27,10 @@ impl<'a> Charset<'a> {
     /// * `charset` - A char slice which contains the chars
     ///
     /// # Examples
+    ///
     /// ```rust
+    /// use bruteforce::charset::Charset;
+    ///
     /// Charset::new(&['A', 'B', 'C', 'D', 'E']);
     /// ```
     pub const fn new(charset: &[char]) -> Charset {
@@ -36,6 +43,63 @@ impl<'a> Charset<'a> {
         }
     }
 
+    /// This function creates a new charset by a defined char range
+    ///
+    /// # Arguments
+    ///
+    /// * `range` - A char range
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// use bruteforce::charset::Charset;
+    ///
+    /// Charset::by_char_range('a'..='z'); // = abcdefghijklmnopqrstuvwxyz
+    /// ```
+    pub fn by_char_range(range: RangeInclusive<char>) -> Charset<'a> {
+        let start: u32 = *range.start() as u32;
+        let end: u32 = *range.end() as u32;
+        let mut vec: Vec<char> = Vec::with_capacity((end - start) as usize);
+        (start..end).for_each(|i| match std::char::from_u32(i) {
+            Some(ch) => vec.push(ch),
+            None => (),
+        });
+        Charset {
+            chars: Cow::Owned(vec),
+        }
+    }
+
+    /// This function creates a new charset by a defined char range ignoring utf-validity
+    ///
+    /// # Arguments
+    ///
+    /// * `range` - A unchecked char range
+    ///
+    /// # Safety
+    ///
+    /// This function is unsafe, as it may construct invalid `char` values.
+    ///
+    /// For a safe version of this function, see the [`by_char_range`] function.
+    ///
+    /// [`by_char_range`]: fn.by_char_range.html
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// use bruteforce::charset::Charset;
+    ///
+    /// let charset = unsafe { Charset::by_char_range_unchecked('a'..='z') };
+    /// ```
+    pub unsafe fn by_char_range_unchecked(range: RangeInclusive<char>) -> Charset<'a> {
+        let start: u32 = *range.start() as u32;
+        let end: u32 = *range.end() as u32;
+        let mut vec: Vec<char> = Vec::with_capacity((end - start) as usize);
+        (start..end).for_each(|i| vec.push(std::char::from_u32_unchecked(i)));
+        Charset {
+            chars: Cow::Owned(vec),
+        }
+    }
+
     /// This function creates a charset by &str
     ///
     /// # Arguments
@@ -45,6 +109,8 @@ impl<'a> Charset<'a> {
     /// # Examples
     ///
     /// ```rust
+    /// use bruteforce::charset::Charset;
+    ///
     /// Charset::new_by_str("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
     ///
     /// // But it is recommended to write:
@@ -72,6 +138,8 @@ impl<'a> Charset<'a> {
     /// # Example
     ///
     /// ```rust
+    /// use bruteforce::charset::Charset;
+    ///
     /// let foo = Charset::from("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
     /// let bar = Charset::from("abcdefghijklmnopqrstuvwxyz");
     /// let result = foo.concat(&bar);
@@ -90,6 +158,8 @@ impl<'a> Charset<'a> {
     ///
     /// # Example
     /// ```rust
+    /// use bruteforce::charset::Charset;
+    ///
     /// let charset = Charset::from("ABCDEF");
     /// charset.len(); // = 6
     /// ```

@@ -88,6 +88,11 @@ mod tests {
     }
 
     #[bench]
+    fn bench_charset_by_range(b: &mut Bencher) {
+        b.iter(|| Charset::by_char_range('a'..='z'));
+    }
+
+    #[bench]
     fn bench_charset_to_string(b: &mut Bencher) {
         b.iter(|| BENCH_CHARS.to_string());
     }
