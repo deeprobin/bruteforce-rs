@@ -22,4 +22,4 @@ no-std-compat = { version = "0.3.0", features = [ "alloc" ] }
 [features]
 default = [ "std", "constants" ]
 constants = []
-std = [ "no-std-compat/std" ]
+std = [ "no-std-compat/std", "no-std-compat/unstable" ]
