@@ -57,13 +57,8 @@ impl<'a> Charset<'a> {
     /// Charset::by_char_range('a'..='z'); // = abcdefghijklmnopqrstuvwxyz
     /// ```
     pub fn by_char_range(range: RangeInclusive<char>) -> Charset<'a> {
-        let start: u32 = *range.start() as u32;
-        let end: u32 = *range.end() as u32;
-        let mut vec: Vec<char> = Vec::with_capacity((end - start) as usize);
-        (start..end).for_each(|i| match std::char::from_u32(i) {
-            Some(ch) => vec.push(ch),
-            None => (),
-        });
+        let range_as_u32 = (*range.start() as u32)..=(*range.end() as u32);
+        let vec = range_as_u32.filter_map(std::char::from_u32).collect();
         Charset {
             chars: Cow::Owned(vec),
         }
@@ -91,10 +86,10 @@ impl<'a> Charset<'a> {
     /// let charset = unsafe { Charset::by_char_range_unchecked('a'..='z') };
     /// ```
     pub unsafe fn by_char_range_unchecked(range: RangeInclusive<char>) -> Charset<'a> {
-        let start: u32 = *range.start() as u32;
-        let end: u32 = *range.end() as u32;
-        let mut vec: Vec<char> = Vec::with_capacity((end - start) as usize);
-        (start..end).for_each(|i| vec.push(std::char::from_u32_unchecked(i)));
+        let range_as_u32 = (*range.start() as u32)..=(*range.end() as u32);
+        let vec = range_as_u32
+            .map(|c| std::char::from_u32_unchecked(c))
+            .collect();
         Charset {
             chars: Cow::Owned(vec),
         }
