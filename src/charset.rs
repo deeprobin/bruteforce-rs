@@ -34,8 +34,8 @@ impl<'a> Charset<'a> {
     /// Charset::new(&['A', 'B', 'C', 'D', 'E']);
     /// ```
     pub const fn new(charset: &[char]) -> Charset {
-        debug_assert!(
-            charset.len() != 0,
+        assert!(
+            !charset.is_empty(),
             "The [char] must contain at least one character"
         );
         Charset {
@@ -60,9 +60,10 @@ impl<'a> Charset<'a> {
         let start: u32 = *range.start() as u32;
         let end: u32 = *range.end() as u32;
         let mut vec: Vec<char> = Vec::with_capacity((end - start) as usize);
-        (start..end).for_each(|i| match std::char::from_u32(i) {
-            Some(ch) => vec.push(ch),
-            None => (),
+        (start..end).for_each(|i| {
+            if let Some(ch) = std::char::from_u32(i) {
+                vec.push(ch)
+            }
         });
         Charset {
             chars: Cow::Owned(vec),
@@ -117,8 +118,8 @@ impl<'a> Charset<'a> {
     /// Charset::from("ABCDEFGHIJKLMNOPRSTUVWXYZ");
     /// ```
     pub fn new_by_str(s: &str) -> Charset<'a> {
-        debug_assert!(
-            s.len() != 0,
+        assert!(
+            !s.is_empty(),
             "The string must contain at least one character"
         );
         let vec = s.chars().collect::<Vec<char>>();

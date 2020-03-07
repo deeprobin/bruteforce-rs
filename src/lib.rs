@@ -172,6 +172,7 @@ pub const SPECIAL_CHARS: Charset = Charset::new(&[
 ]);
 
 /// Represents a brute-forcing instance
+#[derive(Debug, Clone)]
 pub struct BruteForce<'a> {
     /// Represents the charset of the brute-forcer
     pub chars: Charset<'a>,
