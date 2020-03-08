@@ -12,7 +12,7 @@ This is a no_std-compatible zero-dependency* brute force/string generation rust-
 *   [Docs - docs.rs](https://docs.rs/bruteforce/)
 *   [Crate information - crates.io](https://crates.io/crates/bruteforce/)
 
-\* = zero-dependency if std is included  
+\* = zero-dependency if std is included
 
 ## Add to your dependencies
 
@@ -41,3 +41,9 @@ if s == password.to_string() {
 ## Contribution  
 
 If you want you can contribute. We need people, who write better documentation, optimize algorithms, implement more algorithms, finding bugs or submitting ideas.
+
+## Bench Results
+
+| Procession Unit                    | Charset Length | Benchmark Time (bench_raw_next) |
+|------------------------------------|----------------|---------------------------------|
+| Intel® Core™ i3-2100 CPU @ 3.10GHz | 90             | 26ns/iter (+/- 32)              |
