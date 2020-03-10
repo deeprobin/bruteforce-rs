@@ -1,8 +1,4 @@
-//! This is the documentation for the `bruteforce` crate
-//!
-//! It has also no-std support.
-//!
-//! It is ready to get implemented to your projects
+//! This is the documentation for the no-std compatible `bruteforce` crate
 
 #![crate_name = "bruteforce"]
 #![feature(const_fn)]
@@ -299,7 +295,7 @@ impl<'a> BruteForce<'a> {
             self.chars[i]
         }));
         self.current = temp;
-
+        
         // "Add" 1 to self.raw_current
         let mut carryover = true;
         for i in self.raw_current.iter_mut() {
