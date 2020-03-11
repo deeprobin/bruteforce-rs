@@ -295,7 +295,7 @@ impl<'a> BruteForce<'a> {
             self.chars[i]
         }));
         self.current = temp;
-        
+
         // "Add" 1 to self.raw_current
         let mut carryover = true;
         for i in self.raw_current.iter_mut() {
