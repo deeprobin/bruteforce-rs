@@ -5,6 +5,29 @@ use std::ops::Index;
 use std::ops::RangeInclusive;
 use std::slice::Iter;
 
+#[cfg(feature = "bruteforce-macros")]
+#[macro_use]
+use bruteforce_macros::charset_string;
+
+#[cfg(feature = "bruteforce-macros")]
+#[macro_export]
+/// The charset macro generates a charset by a string
+/// 
+/// # Example
+/// 
+/// ```rust
+/// #[macro_use]
+/// use bruteforce::charset::charset;
+/// 
+/// charset!("ABCDEF");
+/// 
+/// ```
+macro_rules! charset {
+    ($string:expr) => {{
+        Charset::new(charset_string!($string))   
+    }};
+}
+
 /// The charset representation for bruteforce
 ///
 /// # Example

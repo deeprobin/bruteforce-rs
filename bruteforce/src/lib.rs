@@ -6,12 +6,17 @@
 #![feature(generators, generator_trait)]
 #![feature(const_if_match)]
 #![feature(const_panic)]
+#![feature(proc_macro_hygiene)]
 #![cfg_attr(not(feature = "std"), no_std)]
 
 extern crate test;
 
 #[cfg(not(feature = "std"))]
 extern crate no_std_compat as std;
+
+#[cfg(feature = "bruteforce-macros")]
+#[macro_use]
+extern crate bruteforce_macros;
 
 use charset::Charset;
 use std::prelude::v1::*;
@@ -22,10 +27,14 @@ use std::ops::{Generator, GeneratorState};
 #[cfg(feature = "generators")]
 use std::pin::Pin;
 
-pub mod charset;
+mod charset;
+
+#[cfg(feature = "bruteforce-macros")]
+pub use crate::charset::*;
 
 #[cfg(test)]
 mod tests {
+    #[macro_use]
     use super::*;
     use test::Bencher;
 
@@ -93,95 +102,14 @@ mod tests {
         b.iter(|| BENCH_CHARS.to_string());
     }
 
-    #[cfg(feature = "std")]
+    #[cfg(feature = "bruteforce-macros")]
     #[test]
-    fn test_multibyte_char() {
-        //Subset of Basic Latin and Latin Extended-A
-        const TEST_CHARS: Charset = Charset::new(&[
-            'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q',
-            'Ā', 'ā', 'Ă', 'ă', 'Ą', 'ą', 'Ć', 'ć', 'Ĉ', 'ĉ', 'Ċ', 'ċ', 'Č', 'č', 'Ď', 'ď', 'Đ',
-        ]);
-        let mut x = BruteForce::new(TEST_CHARS);
-        let password = "EGĀĎ";
-
-        for trys in 1.. {
-            let out = x.raw_next();
-            if out == password {
-                println!(">>> SUCCESS ({} times)", trys);
-                break;
-            }
-        }
+    fn test_macro() {
+        let set: Charset = charset!("ABCDEF");
+        assert_eq!(set[0], 'A');
     }
 
-    #[cfg(all(feature = "constants", feature = "std"))]
-    #[test]
-    fn test_combined_charset() {
-        let charset = UPPERCASE_CHARS
-            .concat(&LOWERCASE_CHARS)
-            .concat(&NUMBER_CHARS)
-            .concat(&SPECIAL_CHARS);
-
-        let mut x = BruteForce::new(charset);
-        //Use length<=3 and start with an early character to finish quickly...
-        let password = "Bb8";
-
-        for trys in 1.. {
-            let out = x.raw_next();
-            println!("{},{}", out, trys);
-            if out == password {
-                println!(">>> SUCCESS ({} times)", trys);
-                break;
-            }
-        }
-    }
 }
-
-/// Uppercase characters from `A` to `Z`
-///
-/// `ABCDEFGHIJKLMNOPQRSTUVWXYZ`
-#[cfg(feature = "constants")]
-#[deprecated(
-    since = "0.1.7",
-    note = "Please implement your charset in your implementation"
-)]
-pub const UPPERCASE_CHARS: Charset = Charset::new(&[
-    'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S',
-    'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
-]);
-
-/// Lowercase characters from `a` to `z`
-///
-/// `abcdefghijklmnopqrstuvwxyz`
-#[cfg(feature = "constants")]
-#[deprecated(
-    since = "0.1.7",
-    note = "Please implement your charset in your implementation"
-)]
-pub const LOWERCASE_CHARS: Charset = Charset::new(&[
-    'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's',
-    't', 'u', 'v', 'w', 'x', 'y', 'z',
-]);
-
-/// Number characters from `0` to `9`
-///
-/// `0123456789`
-#[cfg(feature = "constants")]
-#[deprecated(
-    since = "0.1.7",
-    note = "Please implement your charset in your implementation"
-)]
-pub const NUMBER_CHARS: Charset = Charset::new(&['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']);
-
-/// Most used special characters
-#[cfg(feature = "constants")]
-#[deprecated(
-    since = "0.1.7",
-    note = "Please implement your charset in your implementation"
-)]
-pub const SPECIAL_CHARS: Charset = Charset::new(&[
-    '!', '\"', '\'', '?', '\\', '#', '$', '§', '%', '&', '/', '(', ')', '=', '[', ']', '{', '}',
-    '´', '`', '<', '>', '€', ',', '.', '-', '_',
-]);
 
 /// Represents a brute-forcing instance
 #[derive(Debug, Clone)]
