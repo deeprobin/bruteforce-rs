@@ -140,7 +140,10 @@ mod tests {
 ///
 /// `ABCDEFGHIJKLMNOPQRSTUVWXYZ`
 #[cfg(feature = "constants")]
-#[deprecated(since = "0.1.7", note = "Please implement your charset in your implementation")]
+#[deprecated(
+    since = "0.1.7",
+    note = "Please implement your charset in your implementation"
+)]
 pub const UPPERCASE_CHARS: Charset = Charset::new(&[
     'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S',
     'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
@@ -150,7 +153,10 @@ pub const UPPERCASE_CHARS: Charset = Charset::new(&[
 ///
 /// `abcdefghijklmnopqrstuvwxyz`
 #[cfg(feature = "constants")]
-#[deprecated(since = "0.1.7", note = "Please implement your charset in your implementation")]
+#[deprecated(
+    since = "0.1.7",
+    note = "Please implement your charset in your implementation"
+)]
 pub const LOWERCASE_CHARS: Charset = Charset::new(&[
     'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's',
     't', 'u', 'v', 'w', 'x', 'y', 'z',
@@ -160,12 +166,18 @@ pub const LOWERCASE_CHARS: Charset = Charset::new(&[
 ///
 /// `0123456789`
 #[cfg(feature = "constants")]
-#[deprecated(since = "0.1.7", note = "Please implement your charset in your implementation")]
+#[deprecated(
+    since = "0.1.7",
+    note = "Please implement your charset in your implementation"
+)]
 pub const NUMBER_CHARS: Charset = Charset::new(&['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']);
 
 /// Most used special characters
 #[cfg(feature = "constants")]
-#[deprecated(since = "0.1.7", note = "Please implement your charset in your implementation")]
+#[deprecated(
+    since = "0.1.7",
+    note = "Please implement your charset in your implementation"
+)]
 pub const SPECIAL_CHARS: Charset = Charset::new(&[
     '!', '\"', '\'', '?', '\\', '#', '$', '§', '%', '&', '/', '(', ')', '=', '[', ']', '{', '}',
     '´', '`', '<', '>', '€', ',', '.', '-', '_',
