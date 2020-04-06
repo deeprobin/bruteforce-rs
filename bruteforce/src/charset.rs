@@ -8,15 +8,6 @@ use std::slice::Iter;
 #[cfg(feature = "bruteforce-macros")]
 #[macro_export]
 /// The charset macro generates a `Charset` by a string literal
-///
-/// # Example
-///
-/// ```rust
-/// # #[macro_use] extern crate bruteforce;
-/// # fn main() {
-///     let _uppercase_chars: Charset = charset!("ABCDEFGHIJKLMNOPQRSTUVWXAZ");
-/// # }
-/// ```
 macro_rules! charset {
     ($string:expr) => {{
         charset_string!($string);
