@@ -19,7 +19,7 @@ This is a no_std-compatible zero-dependency* brute force/string generation rust-
 ```toml
 
 [dependencies]
-bruteforce = "0.1.6"
+bruteforce = "0.1.7"
 
 ```
 
@@ -31,10 +31,10 @@ let mut brute_forcer = BruteForce::new(bruteforce::UPPERCASE_CHARS);
 
 const password: &'static str = "PASS";
 for s in brute_forcer {
-if s == password.to_string() {
+    if s == password.to_string() {
        println!("Password cracked");
        break;
-   }
+    }
 }
 ```
 
