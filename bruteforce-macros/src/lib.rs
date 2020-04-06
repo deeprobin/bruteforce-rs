@@ -7,8 +7,8 @@ extern crate no_std_compat as std;
 
 use proc_macro::TokenStream;
 
-use std::prelude::v1::*; // needed for std-compat
 use std::collections::HashSet;
+use std::prelude::v1::*; // needed for std-compat
 
 use quote::quote;
 

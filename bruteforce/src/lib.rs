@@ -1,12 +1,15 @@
 //! This is the documentation for the no-std compatible `bruteforce` crate
 
 #![crate_name = "bruteforce"]
-#![feature(const_fn)]
-#![feature(test)]
-#![feature(generators, generator_trait)]
-#![feature(const_if_match)]
-#![feature(const_panic)]
-#![feature(proc_macro_hygiene)]
+#![feature(
+    const_fn,
+    test,
+    generators,
+    generator_trait,
+    const_if_match,
+    const_panic,
+    proc_macro_hygiene
+)]
 #![cfg_attr(not(feature = "std"), no_std)]
 
 extern crate test;
@@ -17,16 +20,15 @@ extern crate no_std_compat as std;
 #[cfg(feature = "bruteforce-macros")]
 extern crate bruteforce_macros;
 
-use charset::Charset;
-use std::prelude::v1::*;
+pub mod charset;
 
 #[cfg(feature = "generators")]
 use std::ops::{Generator, GeneratorState};
-
 #[cfg(feature = "generators")]
 use std::pin::Pin;
+use std::prelude::v1::*;
 
-pub mod charset;
+use charset::Charset;
 
 #[cfg(test)]
 mod tests {
@@ -187,7 +189,7 @@ impl<'a> BruteForce<'a> {
     ///
     /// ```rust
     /// // This could be useful if we want to save our brute force progress and resume it later
-        /// use bruteforce::BruteForce;
+    /// use bruteforce::BruteForce;
     /// use bruteforce::charset::Charset;
     /// const CHARSET: Charset = Charset::new(&['A', 'B', 'C', 'P', 'S']); // all possible characters
     /// let mut brute_forcer = BruteForce::new_by_start_string(CHARSET, "CCCC".to_string());

@@ -7,19 +7,17 @@
 ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/DeepRobin/bruteforce-rs/CI?style=flat-square)
 ![GitHub issues](https://img.shields.io/github/issues/DeepRobin/bruteforce-rs?style=flat-square)
 
-This is a no_std-compatible zero-dependency* brute force/string generation rust-nightly library.
+This is the fastest string generation library for brute-forcing or similar. (Supports no-std)
 
 *   [Docs - docs.rs](https://docs.rs/bruteforce/)
 *   [Crate information - crates.io](https://crates.io/crates/bruteforce/)
-
-\* = zero-dependency if std is included
 
 ## Add to your dependencies
 
 ```toml
 
 [dependencies]
-bruteforce = "0.1.7"
+bruteforce = "0.2.0"
 
 ```
 
@@ -27,7 +25,7 @@ bruteforce = "0.1.7"
 
 ```rust
 use bruteforce::BruteForce;
-let mut brute_forcer = BruteForce::new(bruteforce::UPPERCASE_CHARS);
+let mut brute_forcer = BruteForce::new(charset!("ABCDEFGHIJKLMNOPQRSTUVWXYZ"));
 
 const password: &'static str = "PASS";
 for s in brute_forcer {

@@ -5,19 +5,22 @@ use std::ops::Index;
 use std::ops::RangeInclusive;
 use std::slice::Iter;
 
-/*
-#[cfg(feature = "bruteforce-macros")]
-#[macro_use]
-use bruteforce_macros::charset_string;*/
-
 #[cfg(feature = "bruteforce-macros")]
 #[macro_export]
-/// The charset macro generates a charset by a string
+/// The charset macro generates a `Charset` by a string literal
+///
+/// # Example
+///
+/// ```rust
+/// # #[macro_use] extern crate bruteforce;
+/// # fn main() {
+///     let _uppercase_chars: Charset = charset!("ABCDEFGHIJKLMNOPQRSTUVWXAZ");
+/// # }
+/// ```
 macro_rules! charset {
     ($string:expr) => {{
-        //let slice: &[char] = charset_string!($string);
         charset_string!($string);
-        Charset::new(slice)   
+        Charset::new(slice)
     }};
 }
 
@@ -52,7 +55,7 @@ impl<'a> Charset<'a> {
     pub const fn new(charset: &[char]) -> Charset {
         assert!(
             !charset.is_empty(),
-            "The [char] must contain at least one character"
+            "The &[char] must contain at least one character"
         );
         Charset {
             chars: Cow::Borrowed(charset),
@@ -174,6 +177,7 @@ impl<'a> Charset<'a> {
     /// let charset = Charset::from("ABCDEF");
     /// charset.len(); // = 6
     /// ```
+    #[inline]
     pub fn len(&self) -> usize {
         self.chars.len()
     }
@@ -188,6 +192,7 @@ impl<'a> Charset<'a> {
     }
 
     /// This function returns the immutable iterator of the internal char slice
+    #[inline]
     pub fn iter(&self) -> Iter<'_, char> {
         self.chars.iter()
     }
