@@ -15,7 +15,6 @@ extern crate test;
 extern crate no_std_compat as std;
 
 #[cfg(feature = "bruteforce-macros")]
-#[macro_use]
 extern crate bruteforce_macros;
 
 use charset::Charset;
@@ -27,10 +26,7 @@ use std::ops::{Generator, GeneratorState};
 #[cfg(feature = "generators")]
 use std::pin::Pin;
 
-mod charset;
-
-#[cfg(feature = "bruteforce-macros")]
-pub use crate::charset::*;
+pub mod charset;
 
 #[cfg(test)]
 mod tests {
@@ -101,14 +97,6 @@ mod tests {
     fn bench_charset_to_string(b: &mut Bencher) {
         b.iter(|| BENCH_CHARS.to_string());
     }
-
-    #[cfg(feature = "bruteforce-macros")]
-    #[test]
-    fn test_macro() {
-        let set: Charset = charset!("ABCDEF");
-        assert_eq!(set[0], 'A');
-    }
-
 }
 
 /// Represents a brute-forcing instance
@@ -199,7 +187,7 @@ impl<'a> BruteForce<'a> {
     ///
     /// ```rust
     /// // This could be useful if we want to save our brute force progress and resume it later
-    /// use bruteforce::BruteForce;
+        /// use bruteforce::BruteForce;
     /// use bruteforce::charset::Charset;
     /// const CHARSET: Charset = Charset::new(&['A', 'B', 'C', 'P', 'S']); // all possible characters
     /// let mut brute_forcer = BruteForce::new_by_start_string(CHARSET, "CCCC".to_string());
