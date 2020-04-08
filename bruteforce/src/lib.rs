@@ -28,6 +28,8 @@ use std::ops::{Generator, GeneratorState};
 use std::pin::Pin;
 use std::prelude::v1::*;
 
+use smallvec::{SmallVec, smallvec};
+
 use charset::Charset;
 
 #[cfg(test)]
@@ -111,7 +113,7 @@ pub struct BruteForce<'a> {
     pub current: String,
 
     /// Reversed representation of current where each element is an index of charset
-    raw_current: Vec<usize>,
+    raw_current: SmallVec<[usize; 4]>,
 }
 
 impl<'a> BruteForce<'a> {
@@ -142,7 +144,7 @@ impl<'a> BruteForce<'a> {
             chars: charset,
             current: String::default(),
             // Maybe the answer is an empty string?
-            raw_current: vec![],
+            raw_current: smallvec![],
         }
     }
 
@@ -174,7 +176,7 @@ impl<'a> BruteForce<'a> {
         BruteForce {
             chars: charset,
             current: String::default(),
-            raw_current: (0..start).map(|_| 0).collect::<Vec<usize>>(),
+            raw_current: (0..start).map(|_| 0).collect::<SmallVec<[usize; 4]>>(),
         }
     }
 
@@ -209,7 +211,7 @@ impl<'a> BruteForce<'a> {
                 .chars()
                 .rev()
                 .map(|c1| charset.iter().position(|&c2| c1 == c2))
-                .collect::<Option<Vec<usize>>>()
+                .collect::<Option<SmallVec<[usize; 4]>>>()
                 .expect("characters in start_string must exist in charset"),
             // assigning charset to chars must happen after it is used by .map()
             chars: charset,
@@ -241,6 +243,7 @@ impl<'a> BruteForce<'a> {
                 break;
             }
         }
+
         if carryover {
             self.raw_current.push(0);
         }
