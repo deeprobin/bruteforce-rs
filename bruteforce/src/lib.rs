@@ -149,7 +149,7 @@ impl<'a> BruteForce<'a> {
     pub fn raw_next(&mut self) -> &str {
         // Generate self.current from self.raw_current
         // This doesn't allocate because it has no content.
-        let mut temp = String::default();
+        let mut temp = String::new();
         // Borrow splitting workaround. https://doc.rust-lang.org/nomicon/borrow-splitting.html
         std::mem::swap(&mut self.current, &mut temp);
         temp.clear();
@@ -161,11 +161,12 @@ impl<'a> BruteForce<'a> {
 
         // "Add" 1 to self.raw_current
         let mut carryover = true;
+        let chars_len_m = self.chars.len() - 1;
         for i in self.raw_current.iter_mut() {
-            *i += 1;
-            if *i == self.chars.len() {
+            if *i == chars_len_m {
                 *i = 0;
             } else {
+                *i += 1;
                 carryover = false;
                 break;
             }
