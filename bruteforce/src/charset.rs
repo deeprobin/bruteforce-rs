@@ -192,6 +192,7 @@ impl<'a> Charset<'a> {
 impl Index<usize> for Charset<'_> {
     type Output = char;
 
+    #[inline]
     fn index(&self, index: usize) -> &Self::Output {
         &self.chars[index]
     }
