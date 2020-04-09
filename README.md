@@ -1,12 +1,12 @@
 # bruteforce
 
-![Crates.io](https://img.shields.io/crates/v/bruteforce?style=flat-square)
-![Crates.io](https://img.shields.io/crates/l/bruteforce?style=flat-square)
-![Codacy grade](https://img.shields.io/codacy/grade/6d381bdf373e4205bfd0d23876acb07d?style=flat-square)
+[![Crates.io](https://img.shields.io/crates/v/bruteforce?style=flat-square)](https://crates.io/crates/bruteforce/)
+[![Crates.io](https://img.shields.io/crates/l/bruteforce?style=flat-square)](LICENSE.md)
+[![Codacy grade](https://img.shields.io/codacy/grade/6d381bdf373e4205bfd0d23876acb07d?style=flat-square)](https://app.codacy.com/manual/DeepRobin/bruteforce-rs/dashboard)
 
-![GitHub Workflow Status](https://img.shields.io/github/workflow/status/DeepRobin/bruteforce-rs/CI?style=flat-square)
-![GitHub issues](https://img.shields.io/github/issues/DeepRobin/bruteforce-rs?style=flat-square)
-![Discord](https://img.shields.io/discord/137221870452867072?style=flat-square)
+[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/DeepRobin/bruteforce-rs/CI?style=flat-square)](https://github.com/deeprobin/bruteforce-rs/actions)
+[![GitHub issues](https://img.shields.io/github/issues/DeepRobin/bruteforce-rs?style=flat-square)](https://github.com/deeprobin/bruteforce-rs/issues)
+[![Discord](https://img.shields.io/discord/137221870452867072?style=flat-square)](https://discord.gg/mFHDMVe)
 
 This is the fastest string generation library for brute-forcing or similar. (Supports no-std)
 
