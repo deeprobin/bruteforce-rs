@@ -30,8 +30,6 @@ use std::prelude::v1::*;
 
 use charset::Charset;
 
-#[cfg(test)]
-mod bench;
 /// Represents a brute-forcing instance
 #[derive(Debug, Clone)]
 pub struct BruteForce<'a> {
