@@ -1,6 +1,6 @@
-use criterion::{Criterion, black_box, criterion_group, criterion_main};
 use bruteforce::charset::Charset;
 use bruteforce::BruteForce;
+use criterion::{black_box, criterion_group, criterion_main, Criterion};
 
 const BENCH_CHARS: Charset = Charset::new(&[
     'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S',
@@ -36,12 +36,12 @@ fn bench_charset_new(c: &mut Criterion) {
     c.bench_function("bench_charset_new", |b| {
         b.iter(|| {
             Charset::new(black_box(&[
-                'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q',
-                'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h',
-                'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y',
-                'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '!', '\"', '\'', '?', '\\', '#',
-                '$', '§', '%', '&', '/', '(', ')', '=', '[', ']', '{', '}', '´', '`', '<', '>', '€',
-                ',', '.', '-', '_',
+                'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P',
+                'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f',
+                'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v',
+                'w', 'x', 'y', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '!', '\"',
+                '\'', '?', '\\', '#', '$', '§', '%', '&', '/', '(', ')', '=', '[', ']', '{', '}',
+                '´', '`', '<', '>', '€', ',', '.', '-', '_',
             ]));
         })
     });
