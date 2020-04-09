@@ -6,6 +6,7 @@
 
 ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/DeepRobin/bruteforce-rs/CI?style=flat-square)
 ![GitHub issues](https://img.shields.io/github/issues/DeepRobin/bruteforce-rs?style=flat-square)
+![Discord](https://img.shields.io/discord/137221870452867072?style=flat-square)
 
 This is the fastest string generation library for brute-forcing or similar. (Supports no-std)
 
