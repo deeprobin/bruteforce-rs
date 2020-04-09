@@ -1,5 +1,5 @@
 # .gitignore file of bruteforce-rs
 
-/target
+target
 Cargo.lock
 .vscode
