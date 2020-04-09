@@ -20,8 +20,15 @@ keywords = [
 no-std-compat = { version = "0.3.0", features = [ "alloc" ] }
 bruteforce-macros = { version = "0.2.0", path = "../bruteforce-macros", optional = true }
 
+[dev-dependencies]
+criterion = "0.3.1"
+
 [features]
 default = [ "std", "constants", "bruteforce-macros" ]
 constants = []
 std = [ "no-std-compat/std", "no-std-compat/unstable" ]
 generators = []
+
+[[bench]]
+name = "basic"
+harness = false
