@@ -39,10 +39,3 @@ for s in brute_forcer {
 ## Contribution  
 
 If you want you can contribute. We need people, who write better documentation, optimize algorithms, implement more algorithms, finding bugs or submitting ideas.
-
-## Bench Results
-
-| Procession Unit                       | Charset Length | Benchmark Time (bench_raw_next) |
-|---------------------------------------|----------------|---------------------------------|
-| Intel® Core™ i3-2100 CPU @ 3.10GHz    | 90             | 26ns/iter (+/- 32)              |
-| Intel® Xeon® CPU E5-2630 v4 @ 2.20GHz | 90             | 38ns/iter (+/- 16)              |
