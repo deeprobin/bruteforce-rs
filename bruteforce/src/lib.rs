@@ -147,8 +147,6 @@ impl<'a> BruteForce<'a> {
 
     /// This returns the next element without unnecessary boxing in a Option
     pub fn raw_next(&mut self) -> &str {
-        // Generate self.current from self.raw_current
-        // This doesn't allocate because it has no content.
         let cur = &mut self.current;
         let chars = &self.chars;
 
