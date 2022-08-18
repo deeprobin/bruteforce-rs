@@ -1,9 +1,9 @@
 [package]
 name = "bruteforce"
 description = "This is a no_std-compatible brute force/string generation rust-nightly library"
-version = "0.2.0"
+version = "0.2.1"
 authors = ["Robin Lindner <robin@deeprobin.de>"]
-edition = "2018"
+edition = "2021"
 license = "MIT"
 homepage = "https://deeprobin.de/?reference=bruteforce"
 documentation = "https://docs.rs/bruteforce/"
@@ -21,11 +21,11 @@ keywords = [
 maintenance = { status = "actively-developed" }
 
 [dependencies]
-no-std-compat = { version = "0.3.0", features = [ "alloc" ] }
-bruteforce-macros = { version = "0.2.0", path = "../bruteforce-macros", optional = true }
+no-std-compat = { version = "0.4.1", features = [ "alloc" ] }
+bruteforce-macros = { version = "0.2.1", path = "../bruteforce-macros", optional = true }
 
 [dev-dependencies]
-criterion = "0.3.1"
+criterion = "0.3.6"
 
 [features]
 default = [ "std", "constants", "bruteforce-macros" ]

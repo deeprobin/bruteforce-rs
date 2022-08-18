@@ -2,19 +2,11 @@
 
 #![crate_name = "bruteforce"]
 #![feature(
-    const_fn,
     test,
     generators,
-    generator_trait,
-    const_if_match,
-    const_panic,
     proc_macro_hygiene
 )]
 #![cfg_attr(not(feature = "std"), no_std)]
-
-extern crate test;
-
-#[cfg(not(feature = "std"))]
 extern crate no_std_compat as std;
 
 #[cfg(feature = "bruteforce-macros")]
