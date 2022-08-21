@@ -7,6 +7,8 @@
     proc_macro_hygiene
 )]
 #![cfg_attr(not(feature = "std"), no_std)]
+
+#[cfg(not(feature = "std"))]
 extern crate no_std_compat as std;
 
 #[cfg(feature = "bruteforce-macros")]
