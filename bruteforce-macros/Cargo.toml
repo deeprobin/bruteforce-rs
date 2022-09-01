@@ -1,7 +1,7 @@
 [package]
 name = "bruteforce-macros"
-edition = "2018"
-version = "0.2.0"
+edition = "2021"
+version = "0.2.1"
 authors = ["Robin Lindner <robin@deeprobin.de>"]
 license = "MIT"
 homepage = "https://deeprobin.de/?reference=bruteforce"
@@ -24,8 +24,8 @@ default = [ "std" ]
 std = [ "no-std-compat/std", "no-std-compat/unstable" ]
 
 [dependencies]
-no-std-compat = { version = "0.3.0", features = [ "alloc" ] }
-quote = "1.0"
+no-std-compat = { version = "0.4.1", features = [ "alloc" ] }
+quote = "1.0.21"
 
 [package.metadata.docs.rs]
 all-features = true
