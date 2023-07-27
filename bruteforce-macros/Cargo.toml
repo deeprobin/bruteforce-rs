@@ -20,12 +20,12 @@ keywords = [
 proc-macro = true
 
 [features]
-default = [ "std" ]
-std = [ "no-std-compat/std", "no-std-compat/unstable" ]
+default = ["std"]
+std = ["no-std-compat/std", "no-std-compat/unstable"]
 
 [dependencies]
 no-std-compat = { version = "0.4.1", features = [ "alloc" ] }
-quote = "1.0.21"
+quote = "1.0.31"
 
 [package.metadata.docs.rs]
 all-features = true
