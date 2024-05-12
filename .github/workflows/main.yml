@@ -12,7 +12,7 @@ jobs:
 
       - name: Install Rust nightly
         run: |
-          rustup install 1.41.0
+          rustup install 1.80.0
           rustup default nightly
           rustup component add rustfmt
       - name: Run rustfmt
@@ -36,7 +36,7 @@ jobs:
 
       - name: Install Rust nightly
         run: |
-          rustup install 1.41.0
+          rustup install 1.80.0
           rustup default nightly
       - name: Build bruteforce
         run: cargo build --all ${{ matrix.cargo_flags }}
