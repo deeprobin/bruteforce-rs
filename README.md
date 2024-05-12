@@ -18,7 +18,7 @@ This is the fastest string generation library for brute-forcing or similar. (Sup
 ```toml
 
 [dependencies]
-bruteforce = "0.2.0"
+bruteforce = "0.3.0"
 
 ```
 
