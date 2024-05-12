@@ -9,28 +9,22 @@ homepage = "https://deeprobin.de/?reference=bruteforce"
 documentation = "https://docs.rs/bruteforce/"
 repository = "https://github.com/DeepRobin/bruteforce-rs.git"
 readme = "../README.md"
-keywords = [
-    "security",
-    "iterator",
-    "password",
-    "algorithm",
-    "no_std",
-]
+keywords = ["security", "iterator", "password", "algorithm", "no_std"]
 
 [badges]
 maintenance = { status = "actively-developed" }
 
 [dependencies]
-no-std-compat = { version = "0.4.1", features = [ "alloc" ] }
+no-std-compat = { version = "0.4.1", features = ["alloc"] }
 bruteforce-macros = { version = "0.2.1", path = "../bruteforce-macros", optional = true }
 
 [dev-dependencies]
 criterion = "0.5.1"
 
 [features]
-default = [ "std", "constants", "bruteforce-macros" ]
+default = ["std", "constants", "bruteforce-macros"]
 constants = []
-std = [ "no-std-compat/std", "no-std-compat/unstable" ]
+std = ["no-std-compat/std", "no-std-compat/unstable"]
 generators = []
 
 [[bench]]
