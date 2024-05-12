@@ -10,8 +10,8 @@
 
 This is the fastest string generation library for brute-forcing or similar. (Supports no-std)
 
-*   [Docs - docs.rs](https://docs.rs/bruteforce/)
-*   [Crate information - crates.io](https://crates.io/crates/bruteforce/)
+* [Docs - docs.rs](https://docs.rs/bruteforce/)
+* [Crate information - crates.io](https://crates.io/crates/bruteforce/)
 
 ## Add to your dependencies
 
