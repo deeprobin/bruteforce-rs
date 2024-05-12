@@ -12,7 +12,7 @@ readme = "../README.md"
 keywords = ["security", "iterator", "password", "algorithm", "no_std"]
 
 [badges]
-maintenance = { status = "actively-developed" }
+maintenance = { status = "passively-maintained" }
 
 [dependencies]
 no-std-compat = { version = "0.4.1", features = ["alloc"] }
