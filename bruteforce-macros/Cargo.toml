@@ -8,13 +8,7 @@ homepage = "https://deeprobin.de/?reference=bruteforce"
 documentation = "https://docs.rs/bruteforce/"
 repository = "https://github.com/DeepRobin/bruteforce-rs.git"
 description = "Macro repository for bruteforce-rs"
-keywords = [
-    "security",
-    "iterator",
-    "password",
-    "algorithm",
-    "no_std",
-]
+keywords = ["security", "iterator", "password", "algorithm", "no_std"]
 
 [lib]
 proc-macro = true
@@ -24,7 +18,7 @@ default = ["std"]
 std = ["no-std-compat/std", "no-std-compat/unstable"]
 
 [dependencies]
-no-std-compat = { version = "0.4.1", features = [ "alloc" ] }
+no-std-compat = { version = "0.4.1", features = ["alloc"] }
 quote = "1.0.31"
 
 [package.metadata.docs.rs]
