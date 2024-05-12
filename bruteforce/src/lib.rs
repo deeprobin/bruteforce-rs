@@ -1,7 +1,7 @@
 //! This is the documentation for the no-std compatible `bruteforce` crate
 
 #![crate_name = "bruteforce"]
-#![feature(test, generators, proc_macro_hygiene)]
+#![feature(test, coroutines, proc_macro_hygiene)]
 #![cfg_attr(not(feature = "std"), no_std)]
 
 #[cfg(not(feature = "std"))]
